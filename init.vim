@@ -130,6 +130,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
     Plug 'honza/vim-snippets'
     Plug 'pangloss/vim-javascript' "fix js indenting
+    Plug 'tpope/vim-fugitive'
     Plug 'vim-airline/vim-airline'
     Plug 'vim-airline/vim-airline-themes'
 call plug#end()
@@ -151,5 +152,4 @@ let g:coc_snippet_next = '<tab>'
 
 " airline config
 let g:airline_theme='jellybeans'
-let g:airline_section_b = '%{strftime("%I:%M %p")}'
 let g:airline#extensions#branch#enabled = 1
