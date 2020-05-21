@@ -88,6 +88,7 @@ let c_space_errors = 1
 
 " Indenting
 set autoindent
+set smartindent
 
 " Navigation
 set nostartofline " Don't jump to first character with page commands.
