@@ -96,11 +96,11 @@ cnoremap <c-a> <home>
 cnoremap <c-e> <end>
 
 " Buffer navigation
-map <C-H> :bprevious<CR>
-map <C-L> :bnext<CR>
+map <silent> <C-Left> :bprevious<CR>
+map <silent> <C-Right> :bnext<CR>
 
 " Numbering
-nmap <C-N> :set invrelativenumber<CR>
+nmap <silent> <C-N> :set invrelativenumber<CR>
 
 " Text
 set nojoinspaces " Better J joins
@@ -142,6 +142,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'tpope/vim-fugitive'
     Plug 'vim-airline/vim-airline'
     Plug 'vim-airline/vim-airline-themes'
+    Plug 'chr4/nginx.vim'
 call plug#end()
 
 " Coc config
