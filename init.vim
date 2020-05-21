@@ -95,6 +95,13 @@ set nostartofline " Don't jump to first character with page commands.
 cnoremap <c-a> <home>
 cnoremap <c-e> <end>
 
+" Buffer navigation
+map <C-H> :bprevious<CR>
+map <C-L> :bnext<CR>
+
+" Numbering
+nmap <C-N> :set invrelativenumber<CR>
+
 " Text
 set nojoinspaces " Better J joins
 au BufWinEnter * set formatoptions-=c formatoptions-=r formatoptions-=o " turn off auto comment markers
@@ -130,6 +137,8 @@ call plug#begin('~/.vim/plugged')
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
     Plug 'honza/vim-snippets'
     Plug 'pangloss/vim-javascript' "fix js indenting
+    Plug 'posva/vim-vue'
+    Plug 'ctrlpvim/ctrlp.vim'
     Plug 'tpope/vim-fugitive'
     Plug 'vim-airline/vim-airline'
     Plug 'vim-airline/vim-airline-themes'
@@ -153,3 +162,17 @@ let g:coc_snippet_next = '<tab>'
 " airline config
 let g:airline_theme='jellybeans'
 let g:airline#extensions#branch#enabled = 1
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#buffer_min_count = 2
+
+" CtrlP config
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*/\.git/*,*/vendor/*,*/node_modules/*
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\v[\/]\.(git|hg|svn)$',
+  \ 'file': '\v\.(exe|so|dll)$',
+  \ }
+let g:ctrlp_match_window = 'bottom,order:ttb,min:1,max:30,results:30'
+let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
+if executable('ag')
+    let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+endif
