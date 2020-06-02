@@ -70,6 +70,9 @@ set laststatus=1
 " set display=
 set display+=lastline
 
+" Copy
+nmap <Leader>y :%y+<cr>
+
 " Paste
 set textwidth=0
 
@@ -144,6 +147,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'vim-airline/vim-airline'
     Plug 'vim-airline/vim-airline-themes'
     Plug 'chr4/nginx.vim'
+    Plug 'tpope/vim-dispatch'
 call plug#end()
 
 " Coc config
@@ -154,12 +158,25 @@ inoremap <silent><expr> <TAB>
       \ <SID>check_back_space() ? "\<TAB>" :
       \ coc#refresh()
 
+nmap <silent><c-down> <Plug>(coc-diagnostic-next)
+nmap <silent><c-up> <Plug>(coc-diagnostic-prev)
+nnoremap  :call <SID>show_documentation()<CR>
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+
 function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
 let g:coc_snippet_next = '<tab>'
+let g:coc_node_path = '/usr/local/bin/node'
 
 " airline config
 let g:airline_theme='jellybeans'
@@ -178,3 +195,6 @@ let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
 if executable('ag')
     let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
 endif
+
+" dispatch shortcuts
+nmap <leader>m :Make<CR>
