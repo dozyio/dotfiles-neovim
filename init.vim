@@ -42,7 +42,7 @@ nmap <Leader>s :%s//g<Left><Left>
 
 " Mouse
 " set mousemodel=popup
-set mouse=a
+set mouse=i
 
 " Misc
 let mapleader='\'
