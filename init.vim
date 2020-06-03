@@ -197,4 +197,4 @@ if executable('ag')
 endif
 
 " dispatch shortcuts
-nmap <leader>m :Make<CR>
+nmap <leader>m :w<CR> :Make<CR>
