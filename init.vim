@@ -116,6 +116,10 @@ au BufWinEnter * set formatoptions+=j " better joins with comments
 autocmd BufEnter *.vue :syntax sync fromstart
 " autocmd BufEnter *.vue :set omnifunc=xmlcomplete#CompleteTags
 
+" Shortcuts
+" stop trying to reload editor
+map <silent> <C-r> <nop>
+
 " blade
 augroup blade_ft
   au!
