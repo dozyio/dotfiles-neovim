@@ -117,8 +117,7 @@ autocmd BufEnter *.vue :syntax sync fromstart
 " autocmd BufEnter *.vue :set omnifunc=xmlcomplete#CompleteTags
 
 " Shortcuts
-" stop trying to reload editor
-map <silent> <C-r> <nop>
+
 
 " blade
 augroup blade_ft
