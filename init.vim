@@ -71,7 +71,10 @@ set laststatus=1
 set display+=lastline
 
 " Copy
+" whole file to system buffer
 nmap <Leader>y :%y+<cr>
+" visual selected to system buffer
+vmap <Leader>c "+y<cr>
 
 " Paste
 set textwidth=0
