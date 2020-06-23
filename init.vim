@@ -10,6 +10,9 @@ set shiftwidth=4
 set expandtab
 set smarttab
 
+" autocmd BufRead,BufNewFile *.js,*.yml,*.yaml,*.py set tabstop=2
+" autocmd BufRead,BufNewFile *.js,*.yml,*.yaml,*.py set shiftwidth=2
+
 " Deleting
 set backspace=indent,eol,start  " easy delete
 
@@ -154,6 +157,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'vim-airline/vim-airline-themes'
     Plug 'chr4/nginx.vim'
     Plug 'tpope/vim-dispatch'
+    Plug 'Yggdroot/indentLine'
 call plug#end()
 
 " Coc config
@@ -202,5 +206,12 @@ if executable('ag')
     let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
 endif
 
-" dispatch shortcuts
+" Dispatch shortcuts
 nmap <leader>m :w<CR> :Make<CR>
+
+" indent guides off by default
+let g:indentLine_enabled = 0
+autocmd BufRead,BufNewFile *.yml,*.yaml,*.py let g:indentLine_enabled = 1
+let g:indentLine_char_list = ['⎸']
+nmap <leader>i :IndentLinesToggle<CR>
+
