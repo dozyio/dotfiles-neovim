@@ -193,6 +193,8 @@ nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
 highlight CocFloating ctermbg=darkred ctermfg=black
+highlight CocWarningFloat ctermbg=darkred ctermfg=black
+highlight CocErrorFloat ctermbg=darkred ctermfg=black
 
 " airline config
 let g:airline_theme='jellybeans'
