@@ -161,7 +161,7 @@ call plug#begin('~/.vim/plugged')
 call plug#end()
 
 " Coc config
-let g:coc_global_extensions=[ 'coc-html', 'coc-prettier', 'coc-eslint', 'coc-json', 'coc-css', 'coc-phpls', 'coc-vetur', 'coc-tsserver', 'coc-snippets', 'coc-lists', 'coc-highlight' ]
+let g:coc_global_extensions=[ 'coc-html', 'coc-prettier', 'coc-eslint', 'coc-json', 'coc-css', 'coc-phpls', 'coc-vetur', 'coc-tsserver', 'coc-snippets', 'coc-lists', 'coc-highlight', 'coc-go' ]
 inoremap <silent><expr> <TAB>
       \ pumvisible() ? coc#_select_confirm() :
       \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
@@ -179,7 +179,6 @@ function! s:show_documentation()
   endif
 endfunction
 
-
 function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
@@ -187,6 +186,13 @@ endfunction
 
 let g:coc_snippet_next = '<tab>'
 let g:coc_node_path = '/usr/local/bin/node'
+
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+highlight CocFloating ctermbg=darkred ctermfg=black
 
 " airline config
 let g:airline_theme='jellybeans'
