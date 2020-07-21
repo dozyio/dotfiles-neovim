@@ -158,6 +158,8 @@ call plug#begin('~/.vim/plugged')
     Plug 'chr4/nginx.vim'
     Plug 'tpope/vim-dispatch'
     Plug 'Yggdroot/indentLine'
+    Plug 'hashivim/vim-terraform'
+    Plug 'junegunn/vim-easy-align'
 call plug#end()
 
 " Coc config
@@ -170,6 +172,8 @@ inoremap <silent><expr> <TAB>
 
 nmap <silent><c-down> <Plug>(coc-diagnostic-next)
 nmap <silent><c-up> <Plug>(coc-diagnostic-prev)
+nmap <silent><nowait> <leader>e :<C-u>CocList diagnostics<cr>
+
 nnoremap  :call <SID>show_documentation()<CR>
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
@@ -217,9 +221,17 @@ endif
 " Dispatch shortcuts
 nmap <leader>m :w<CR> :Make<CR>
 
-" indent guides off by default
+" Indent guides config - off by default
 let g:indentLine_enabled = 0
 autocmd BufRead,BufNewFile *.yml,*.yaml,*.py let g:indentLine_enabled = 1
 let g:indentLine_char_list = ['⎸']
 nmap <leader>i :IndentLinesToggle<CR>
 
+" terraform config
+let g:terraform_align=1
+let g:terraform_fmt_on_save=1
+
+" vim-easy-align config
+xmap ga <Plug>(EasyAlign)
+nmap ga <Plug>(EasyAlign)
+nmap <silent><leader>= vipga=
