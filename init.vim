@@ -10,8 +10,8 @@ set shiftwidth=4
 set expandtab
 set smarttab
 
-autocmd BufRead,BufNewFile *.js,*.yml,*.yaml,*.py set tabstop=2
-autocmd BufRead,BufNewFile *.js,*.yml,*.yaml,*.py set shiftwidth=2
+autocmd BufRead,BufNewFile *.js,*.yml,*.yaml,*.py,*.vue set tabstop=2
+autocmd BufRead,BufNewFile *.js,*.yml,*.yaml,*.py,*.vue set shiftwidth=2
 
 " Deleting
 set backspace=indent,eol,start  " easy delete
