@@ -10,8 +10,8 @@ set shiftwidth=4
 set expandtab
 set smarttab
 
-" autocmd BufRead,BufNewFile *.js,*.yml,*.yaml,*.py set tabstop=2
-" autocmd BufRead,BufNewFile *.js,*.yml,*.yaml,*.py set shiftwidth=2
+autocmd BufRead,BufNewFile *.js,*.yml,*.yaml,*.py set tabstop=2
+autocmd BufRead,BufNewFile *.js,*.yml,*.yaml,*.py set shiftwidth=2
 
 " Deleting
 set backspace=indent,eol,start  " easy delete
@@ -86,13 +86,21 @@ set textwidth=0
 " Highlight problematic whitespace
 " set listchars=tab:,.,trail:.,extends:#,nbsp:.
 set listchars=
-set list
+set nolist
 highlight ExtraWhitespace ctermbg=DarkGray
 match ExtraWhitespace /\s\+$/
 autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
 autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 autocmd BufWinLeave * call clearmatches()
+
+highlight Tabs ctermbg=DarkGray
+match Tabs /\t/
+autocmd BufWinEnter * match Tabs /\t/
+autocmd InsertEnter * match Tabs /\t/
+autocmd InsertLeave * match Tabs /\t/
+autocmd BufWinLeave * call clearmatches()
+
 let c_space_errors = 1
 
 " Indenting
