@@ -45,7 +45,7 @@ nmap <Leader>s :%s//g<Left><Left>
 
 " Mouse
 " set mousemodel=popup
-set mouse=i
+set mouse=
 
 " Misc
 let mapleader='\'
@@ -94,12 +94,16 @@ autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 autocmd BufWinLeave * call clearmatches()
 
-highlight Tabs ctermbg=DarkGray
-match Tabs /\t/
-autocmd BufWinEnter * match Tabs /\t/
-autocmd InsertEnter * match Tabs /\t/
-autocmd InsertLeave * match Tabs /\t/
-autocmd BufWinLeave * call clearmatches()
+let ignoretabhighlighting = ['go']
+augroup notabhighlight
+    autocmd!
+    highlight Tabs ctermbg=DarkGray
+    match Tabs /\t/
+    autocmd BufWinEnter * if index(ignoretabhighlighting, &ft) < 0 | match Tabs /\t/
+    autocmd InsertEnter * if index(ignoretabhighlighting, &ft) < 0 | match Tabs /\t/
+    autocmd InsertLeave * if index(ignoretabhighlighting, &ft) < 0 | match Tabs /\t/
+    autocmd BufWinLeave * if index(ignoretabhighlighting, &ft) < 0 | call clearmatches()
+augroup END
 
 let c_space_errors = 1
 
@@ -122,8 +126,8 @@ nmap <silent> <C-N> :set invrelativenumber<CR>
 
 " Text
 set nojoinspaces " Better J joins
-au BufWinEnter * set formatoptions-=c formatoptions-=r formatoptions-=o " turn off auto comment markers
-au BufWinEnter * set formatoptions+=j " better joins with comments
+autocmd BufWinEnter * set formatoptions-=c formatoptions-=r formatoptions-=o " turn off auto comment markers
+autocmd BufWinEnter * set formatoptions+=j " better joins with comments
 
 " Filetypes
 " vue
@@ -135,7 +139,7 @@ autocmd BufEnter *.vue :syntax sync fromstart
 
 " blade
 augroup blade_ft
-  au!
+  autocmd!
   autocmd BufNewFile,BufRead *.blade.php set syntax=php
   autocmd BufNewFile,BufRead *.blade.php set filetype=html
 augroup END
@@ -146,7 +150,7 @@ autocmd FileType yaml setlocal shiftwidth=2 softtabstop=2 expandtab
 " Useful Functions
 " remember cursor postion when reopen file
 augroup vimrcEx
-    au!
+    autocmd!
     autocmd BufReadPost *
         \ if line("'\"") > 0 && line("'\"") <= line("$") |
         \   exe "normal g`\"" |
@@ -168,6 +172,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'Yggdroot/indentLine'
     Plug 'hashivim/vim-terraform'
     Plug 'junegunn/vim-easy-align'
+    Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 call plug#end()
 
 " Coc config
