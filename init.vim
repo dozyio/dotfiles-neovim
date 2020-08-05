@@ -73,6 +73,9 @@ set laststatus=1
 " set display=
 set display+=lastline
 
+" title bar
+set title
+
 " Copy
 " whole file to system buffer
 nmap <Leader>y :%y+<cr>
@@ -94,7 +97,7 @@ autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 autocmd BufWinLeave * call clearmatches()
 
-let ignoretabhighlighting = ['go']
+let ignoretabhighlighting = ['go','txt','text']
 augroup notabhighlight
     autocmd!
     highlight Tabs ctermbg=DarkGray
@@ -146,6 +149,24 @@ augroup END
 
 " yaml
 autocmd FileType yaml setlocal shiftwidth=2 softtabstop=2 expandtab
+
+" go
+augroup go
+  autocmd!
+  autocmd BufNewFile,BufRead *.go let g:go_highlight_extra_types = 1
+  autocmd BufNewFile,BufRead *.go let g:go_highlight_structs = 1 
+  autocmd BufNewFile,BufRead *.go let g:go_highlight_functions = 1
+  autocmd BufNewFile,BufRead *.go let g:go_highlight_function_calls = 1
+  autocmd BufNewFile,BufRead *.go let g:go_highlight_function_parameters = 1
+  autocmd BufNewFile,BufRead *.go let g:go_highlight_types = 1
+  autocmd BufNewFile,BufRead *.go let g:go_highlight_fields = 1
+  autocmd BufNewFile,BufRead *.go let g:go_highlight_operators = 1
+  autocmd BufNewFile,BufRead *.go let g:go_highlight_build_constraints = 1
+  autocmd BufNewFile,BufRead *.go let g:go_highlight_generate_tags = 1
+  autocmd BufNewFile,BufRead *.go let g:go_highlight_variable_declarations = 1
+  autocmd BufNewFile,BufRead *.go let g:go_highlight_variable_assignments = 1
+  autocmd BufNewFile,BufRead *.go nmap <Leader><space> :nohlsearch<cr>:GoCoverageClear<cr>
+augroup END
 
 " Useful Functions
 " remember cursor postion when reopen file
@@ -248,3 +269,5 @@ let g:terraform_fmt_on_save=1
 xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 nmap <silent><leader>= vipga=
+
+
