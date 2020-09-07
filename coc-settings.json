@@ -10,5 +10,6 @@
             "initializationOptions": {},
             "settings": {}
         }
-    }
+    },
+    "coc.preferences.formatOnSaveFiletypes": ["javascript", "vue"]
 }

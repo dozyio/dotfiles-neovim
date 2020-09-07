@@ -80,7 +80,7 @@ set title
 " whole file to system buffer
 nmap <Leader>y :%y+<cr>
 " visual selected to system buffer
-vmap <Leader>c "+y<cr>
+vmap <silent> <Leader>c "+y<cr>
 
 " Paste
 set textwidth=0
@@ -97,7 +97,7 @@ autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 autocmd BufWinLeave * call clearmatches()
 
-let ignoretabhighlighting = ['go','txt','text']
+let ignoretabhighlighting = ['go','txt','text','make','typescript']
 augroup notabhighlight
     autocmd!
     highlight Tabs ctermbg=DarkGray
@@ -166,6 +166,7 @@ augroup go
   autocmd BufNewFile,BufRead *.go let g:go_highlight_variable_declarations = 1
   autocmd BufNewFile,BufRead *.go let g:go_highlight_variable_assignments = 1
   autocmd BufNewFile,BufRead *.go nmap <Leader><space> :nohlsearch<cr>:GoCoverageClear<cr>
+  autocmd BufNewFile,BufRead *.go let g:go_fmt_command = "goimports"
 augroup END
 
 " Useful Functions
@@ -197,7 +198,7 @@ call plug#begin('~/.vim/plugged')
 call plug#end()
 
 " Coc config
-let g:coc_global_extensions=[ 'coc-html', 'coc-prettier', 'coc-eslint', 'coc-json', 'coc-css', 'coc-phpls', 'coc-vetur', 'coc-tsserver', 'coc-snippets', 'coc-lists', 'coc-highlight', 'coc-go' ]
+let g:coc_global_extensions=[ 'coc-html', 'coc-prettier', 'coc-eslint', 'coc-json', 'coc-css', 'coc-phpls', 'coc-vetur', 'coc-tsserver', 'coc-snippets', 'coc-lists', 'coc-highlight', 'coc-go', 'coc-python' ]
 inoremap <silent><expr> <TAB>
       \ pumvisible() ? coc#_select_confirm() :
       \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
@@ -234,6 +235,8 @@ highlight CocFloating ctermbg=darkred ctermfg=black
 highlight CocWarningFloat ctermbg=darkred ctermfg=black
 highlight CocErrorFloat ctermbg=darkred ctermfg=black
 
+command! -nargs=0 Prettier :call CocAction('runCommand', 'prettier.formatFile')
+
 " airline config
 let g:airline_theme='jellybeans'
 let g:airline#extensions#branch#enabled = 1
@@ -269,5 +272,4 @@ let g:terraform_fmt_on_save=1
 xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 nmap <silent><leader>= vipga=
-
 
