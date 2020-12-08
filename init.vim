@@ -1,3 +1,24 @@
+" Plugins
+call plug#begin('~/.vim/plugged')
+    Plug 'Yggdroot/indentLine'
+    Plug 'airblade/vim-gitgutter'
+    Plug 'chr4/nginx.vim', { 'for': 'nginx' }
+    Plug 'ctrlpvim/ctrlp.vim'
+    Plug 'fatih/vim-go', { 'for': 'go', 'do': ':GoUpdateBinaries' }
+    Plug 'hashivim/vim-terraform', { 'for': 'terraform' }
+    Plug 'honza/vim-snippets'
+    Plug 'junegunn/vim-easy-align'
+    Plug 'neoclide/coc.nvim', {'branch': 'release'}
+    Plug 'noahfrederick/vim-composer', { 'for': 'php' }
+    Plug 'noahfrederick/vim-laravel', { 'for': 'php' }
+    Plug 'pangloss/vim-javascript' "fix js indenting
+    Plug 'posva/vim-vue', { 'for': 'vue' }
+    Plug 'tpope/vim-dispatch'
+    Plug 'tpope/vim-fugitive'
+    Plug 'vim-airline/vim-airline'
+    Plug 'vim-airline/vim-airline-themes'
+call plug#end()
+
 " Syntax
 syntax on
 set synmaxcol=1000
@@ -12,6 +33,7 @@ set smarttab
 
 autocmd BufRead,BufNewFile *.js,*.yml,*.yaml,*.py,*.vue set tabstop=2
 autocmd BufRead,BufNewFile *.js,*.yml,*.yaml,*.py,*.vue set shiftwidth=2
+autocmd BufRead,BufNewFile *.js,*.yml,*.yaml,*.py,*.vue set noexpandtab
 
 " Deleting
 set backspace=indent,eol,start  " easy delete
@@ -97,7 +119,7 @@ autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 autocmd BufWinLeave * call clearmatches()
 
-let ignoretabhighlighting = ['go','txt','text','make','typescript']
+let ignoretabhighlighting = ['go','txt','text','make','typescript','vue']
 augroup notabhighlight
     autocmd!
     highlight Tabs ctermbg=DarkGray
@@ -126,10 +148,11 @@ map <silent> <C-Right> :bnext<CR>
 
 " Numbering
 nmap <silent> <C-N> :set invrelativenumber<CR>
+nmap <silent> <C-L> :set invnumber<CR>
 
 " Text
 set nojoinspaces " Better J joins
-autocmd BufWinEnter * set formatoptions-=c formatoptions-=r formatoptions-=o " turn off auto comment markers
+"autocmd BufWinEnter * set formatoptions-=c formatoptions-=r formatoptions-=o " turn off auto comment markers
 autocmd BufWinEnter * set formatoptions+=j " better joins with comments
 
 " Filetypes
@@ -179,26 +202,10 @@ augroup vimrcEx
         \ endif
 augroup END
 
-" Plugins
-call plug#begin('~/.vim/plugged')
-    Plug 'neoclide/coc.nvim', {'branch': 'release'}
-    Plug 'honza/vim-snippets'
-    Plug 'pangloss/vim-javascript' "fix js indenting
-    Plug 'posva/vim-vue'
-    Plug 'ctrlpvim/ctrlp.vim'
-    Plug 'tpope/vim-fugitive'
-    Plug 'vim-airline/vim-airline'
-    Plug 'vim-airline/vim-airline-themes'
-    Plug 'chr4/nginx.vim'
-    Plug 'tpope/vim-dispatch'
-    Plug 'Yggdroot/indentLine'
-    Plug 'hashivim/vim-terraform'
-    Plug 'junegunn/vim-easy-align'
-    Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
-call plug#end()
 
 " Coc config
-let g:coc_global_extensions=[ 'coc-html', 'coc-prettier', 'coc-eslint', 'coc-json', 'coc-css', 'coc-phpls', 'coc-vetur', 'coc-tsserver', 'coc-snippets', 'coc-lists', 'coc-highlight', 'coc-go', 'coc-python' ]
+let g:coc_global_extensions=[ 'coc-html', 'coc-prettier', 'coc-eslint', 'coc-json', 'coc-css', 'coc-vetur', 'coc-tsserver', 'coc-lists', 'coc-highlight', 'coc-go', 'coc-python' ]
+
 inoremap <silent><expr> <TAB>
       \ pumvisible() ? coc#_select_confirm() :
       \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
@@ -235,7 +242,7 @@ highlight CocFloating ctermbg=darkred ctermfg=black
 highlight CocWarningFloat ctermbg=darkred ctermfg=black
 highlight CocErrorFloat ctermbg=darkred ctermfg=black
 
-command! -nargs=0 Prettier :call CocAction('runCommand', 'prettier.formatFile')
+"command! -nargs=0 Prettier :call CocAction('runCommand', 'prettier.formatFile')
 
 " airline config
 let g:airline_theme='jellybeans'
@@ -272,4 +279,7 @@ let g:terraform_fmt_on_save=1
 xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 nmap <silent><leader>= vipga=
+
+" gitgutter
+nmap <silent> <C-t> :GitGutterToggle<CR>
 
