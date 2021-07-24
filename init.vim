@@ -1,28 +1,40 @@
+" Syntax
+syntax on
+set synmaxcol=1000
+autocmd BufEnter * :syntax sync fromstart
+
 " Plugins
 call plug#begin('~/.vim/plugged')
+    " Plug 'neomake/neomake',
+    " Plug 'sbdchd/neoformat',
     Plug 'Yggdroot/indentLine'
     Plug 'airblade/vim-gitgutter'
     Plug 'chr4/nginx.vim', { 'for': 'nginx' }
     Plug 'ctrlpvim/ctrlp.vim'
     Plug 'fatih/vim-go', { 'for': 'go', 'do': ':GoUpdateBinaries' }
+    Plug 'jvirtanen/vim-hcl',
     Plug 'hashivim/vim-terraform', { 'for': 'terraform' }
     Plug 'honza/vim-snippets'
     Plug 'junegunn/vim-easy-align'
+    Plug 'lvht/phpcd.vim', { 'for': 'php', 'do': 'composer install' }
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
     Plug 'noahfrederick/vim-composer', { 'for': 'php' }
     Plug 'noahfrederick/vim-laravel', { 'for': 'php' }
     Plug 'pangloss/vim-javascript' "fix js indenting
+    Plug 'maxmellon/vim-jsx-pretty', { 'for': 'javascript' }
     Plug 'posva/vim-vue', { 'for': 'vue' }
     Plug 'tpope/vim-dispatch'
     Plug 'tpope/vim-fugitive'
+    Plug 'tpope/vim-obsession'
     Plug 'vim-airline/vim-airline'
     Plug 'vim-airline/vim-airline-themes'
+    Plug 'prettier/vim-prettier', { 'do': 'yarn install', 'for': ['javascript', 'typescript'] }
+    Plug 'rhysd/committia.vim'
 call plug#end()
 
-" Syntax
-syntax on
-set synmaxcol=1000
-autocmd BufEnter * :syntax sync fromstart
+" project specific config files
+set exrc
+set secure
 
 " Tabs
 set tabstop=4
@@ -31,9 +43,18 @@ set shiftwidth=4
 set expandtab
 set smarttab
 
-autocmd BufRead,BufNewFile *.js,*.yml,*.yaml,*.py,*.vue set tabstop=2
-autocmd BufRead,BufNewFile *.js,*.yml,*.yaml,*.py,*.vue set shiftwidth=2
-autocmd BufRead,BufNewFile *.js,*.yml,*.yaml,*.py,*.vue set noexpandtab
+autocmd BufRead,BufNewFile *.js,*.ts,*.vue set tabstop=2
+autocmd BufRead,BufNewFile *.js,*.ts,*.vue set shiftwidth=2
+autocmd BufRead,BufNewFile *.js,*.vue set noexpandtab
+autocmd BufRead,BufNewFile *.ts set expandtab
+
+autocmd BufRead,BufNewFile *.yml,*.yaml,*.hcl set tabstop=2
+autocmd BufRead,BufNewFile *.yml,*.yaml,*.hcl set shiftwidth=2
+autocmd BufRead,BufNewFile *.yml,*.yaml,*.hcl set expandtab
+
+autocmd BufRead,BufNewFile *.py set tabstop=2
+autocmd BufRead,BufNewFile *.py set shiftwidth=2
+autocmd BufRead,BufNewFile *.py set noexpandtab
 
 " Deleting
 set backspace=indent,eol,start  " easy delete
@@ -63,7 +84,7 @@ set showmatch
 set ignorecase
 set smartcase
 nmap <Leader><space> :nohlsearch<cr>
-nmap <Leader>s :%s//g<Left><Left>
+nmap <Leader>s V :%s//g<Left><Left>
 
 " Mouse
 " set mousemodel=popup
@@ -83,6 +104,8 @@ set noerrorbells
 colorscheme pablo
 highlight CocFloating guibg=none guifg=none
 highlight Pmenu ctermbg=gray guibg=gray
+highlight Search ctermbg=darkblue
+highlight Search ctermfg=white
 
 " Spelling
 "autocmd BufEnter *.txt :setlocal spell spelllang=en_gb
@@ -119,7 +142,7 @@ autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 autocmd BufWinLeave * call clearmatches()
 
-let ignoretabhighlighting = ['go','txt','text','make','typescript','vue']
+let ignoretabhighlighting = ["go","txt","text","make","typescript","vue","javascript"]
 augroup notabhighlight
     autocmd!
     highlight Tabs ctermbg=DarkGray
@@ -132,6 +155,10 @@ augroup END
 
 let c_space_errors = 1
 
+" Always show the signcolumn, otherwise it would shift the text each time
+" diagnostics appear/become resolved.
+set signcolumn=yes
+
 " Indenting
 set autoindent
 set smartindent
@@ -142,9 +169,11 @@ set nostartofline " Don't jump to first character with page commands.
 cnoremap <c-a> <home>
 cnoremap <c-e> <end>
 
-" Buffer navigation
+" Buffers
 map <silent> <C-Left> :bprevious<CR>
 map <silent> <C-Right> :bnext<CR>
+set hidden " Allow navigation between buffers without saving
+
 
 " Numbering
 nmap <silent> <C-N> :set invrelativenumber<CR>
@@ -204,7 +233,7 @@ augroup END
 
 
 " Coc config
-let g:coc_global_extensions=[ 'coc-html', 'coc-prettier', 'coc-eslint', 'coc-json', 'coc-css', 'coc-vetur', 'coc-tsserver', 'coc-lists', 'coc-highlight', 'coc-go', 'coc-python' ]
+let g:coc_global_extensions=[ 'coc-html', 'coc-prettier', 'coc-eslint', 'coc-json', 'coc-css', 'coc-vetur', 'coc-tsserver', 'coc-lists', 'coc-highlight', 'coc-go', 'coc-python', 'coc-tailwindcss', 'coc-lua' ]
 
 inoremap <silent><expr> <TAB>
       \ pumvisible() ? coc#_select_confirm() :
@@ -215,6 +244,7 @@ inoremap <silent><expr> <TAB>
 nmap <silent><c-down> <Plug>(coc-diagnostic-next)
 nmap <silent><c-up> <Plug>(coc-diagnostic-prev)
 nmap <silent><nowait> <leader>e :<C-u>CocList diagnostics<cr>
+nmap <silent><leader>f <Plug>(coc-codeaction)
 
 nnoremap  :call <SID>show_documentation()<CR>
 function! s:show_documentation()
@@ -242,7 +272,6 @@ highlight CocFloating ctermbg=darkred ctermfg=black
 highlight CocWarningFloat ctermbg=darkred ctermfg=black
 highlight CocErrorFloat ctermbg=darkred ctermfg=black
 
-"command! -nargs=0 Prettier :call CocAction('runCommand', 'prettier.formatFile')
 
 " airline config
 let g:airline_theme='jellybeans'
@@ -283,3 +312,23 @@ nmap <silent><leader>= vipga=
 " gitgutter
 nmap <silent> <C-t> :GitGutterToggle<CR>
 
+vmap <silent> <C-s> :sort<CR>
+
+" Prettier
+" autocmd TextChanged,InsertLeave *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.svelte,*.yaml,*.html PrettierAsync
+" Prettier
+" command! -nargs=0 Prettier :call CocAction('runCommand', 'prettier.formatFile')
+let g:prettier#autoformat = 0
+let g:prettier#quickfix_enabled = 0
+let g:prettier#exec_cmd_async = 1
+
+autocmd InsertLeave *.js PrettierAsync
+
+
+" let g:neoformat_php_psr12 = {
+"    \ 'exe': 'phpcbf',
+"    \ 'args': '--standard=psr12',
+"    \ 'stdin': 1,
+"    \ 'valid_exit_codes': [0,1]
+"    \ }
+"let g:neoformat_enabled_php = ['psr12']

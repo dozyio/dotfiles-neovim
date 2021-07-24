@@ -1,37 +1,36 @@
 {
-    "languageserver": {
-        "terraform": {
-            "command": "terraform-ls",
-            "args": ["serve"],
-            "filetypes": [
-                "terraform",
-                "tf"
-            ],
-            "initializationOptions": {},
-            "settings": {}
-        },
-        "intelephense": {
-            "command": "intelephense",
-            "args": ["--stdio"],
-            "filetypes": ["php"],
-            "initializationOptions": {
-                "storagePath": "/tmp/intelephense"
-            },
-            "settings": {
-                "intelephense": {
-                    "files": {
-                        "maxSize": 1000000,
-                        "associations": ["*.php", "*.phtml"]
-                    },
-                    "completion": {
-                        "insertUseDeclaration": true,
-                        "fullyQualifyGlobalConstantsAndFunctions": false,
-                        "triggerParameterHints": true,
-                        "maxItems": 15
-                    }
-                }
-            }
-        }
+  "languageserver": {
+    "terraform": {
+      "command": "terraform-ls",
+      "args": ["serve"],
+      "filetypes": ["terraform", "tf"],
+      "initializationOptions": {},
+      "settings": {}
     },
-    "coc.preferences.formatOnSaveFiletypes": ["", ""]
+    "intelephense": {
+      "command": "intelephense",
+      "args": ["--stdio"],
+      "filetypes": ["php"],
+      "initializationOptions": {
+        "storagePath": "/tmp/intelephense"
+      },
+      "settings": {
+        "intelephense": {
+          "files": {
+            "maxSize": 1000000,
+            "associations": ["*.php", "*.phtml"]
+          },
+          "completion": {
+            "insertUseDeclaration": true,
+            "fullyQualifyGlobalConstantsAndFunctions": false,
+            "triggerParameterHints": true,
+            "maxItems": 100
+          }
+        }
+      }
+    }
+  },
+  "tailwindCSS.headwind.removeDuplicates": true,
+  "tailwindCSS.headwind.defaultSortOrder": [],
+  "coc.preferences.formatOnSaveFiletypes": [""]
 }
