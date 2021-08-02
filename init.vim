@@ -5,31 +5,42 @@ autocmd BufEnter * :syntax sync fromstart
 
 " Plugins
 call plug#begin('~/.vim/plugged')
-    " Plug 'neomake/neomake',
-    " Plug 'sbdchd/neoformat',
-    Plug 'Yggdroot/indentLine'
-    Plug 'airblade/vim-gitgutter'
-    Plug 'chr4/nginx.vim', { 'for': 'nginx' }
-    Plug 'ctrlpvim/ctrlp.vim'
-    Plug 'fatih/vim-go', { 'for': 'go', 'do': ':GoUpdateBinaries' }
-    Plug 'jvirtanen/vim-hcl',
+    " Language specfic
     Plug 'hashivim/vim-terraform', { 'for': 'terraform' }
-    Plug 'honza/vim-snippets'
-    Plug 'junegunn/vim-easy-align'
+    Plug 'jvirtanen/vim-hcl',
+    Plug 'fatih/vim-go', { 'for': 'go', 'do': ':GoUpdateBinaries' }
     Plug 'lvht/phpcd.vim', { 'for': 'php', 'do': 'composer install' }
-    Plug 'neoclide/coc.nvim', {'branch': 'release'}
     Plug 'noahfrederick/vim-composer', { 'for': 'php' }
     Plug 'noahfrederick/vim-laravel', { 'for': 'php' }
-    Plug 'pangloss/vim-javascript' "fix js indenting
     Plug 'maxmellon/vim-jsx-pretty', { 'for': 'javascript' }
+    Plug 'pangloss/vim-javascript', { 'for': 'javascript' } "fix js indenting
     Plug 'posva/vim-vue', { 'for': 'vue' }
-    Plug 'tpope/vim-dispatch'
-    Plug 'tpope/vim-fugitive'
-    Plug 'tpope/vim-obsession'
-    Plug 'vim-airline/vim-airline'
-    Plug 'vim-airline/vim-airline-themes'
-    Plug 'prettier/vim-prettier', { 'do': 'yarn install', 'for': ['javascript', 'typescript'] }
+    Plug 'chr4/nginx.vim', { 'for': 'nginx' }
+    Plug 'prettier/vim-prettier', { 'do': 'yarn install', 'for': ['javascript', 'vue', 'typescript'] }
+
+    " Git
+    Plug 'airblade/vim-gitgutter'
     Plug 'rhysd/committia.vim'
+    Plug 'tpope/vim-fugitive'
+
+    " Utils
+    Plug 'neoclide/coc.nvim', {'branch': 'release'}
+    Plug 'Yggdroot/indentLine'
+    Plug 'ctrlpvim/ctrlp.vim'
+    Plug 'honza/vim-snippets'
+    Plug 'junegunn/vim-easy-align'
+    Plug 'tpope/vim-dispatch'
+    Plug 'tpope/vim-obsession'
+    Plug 'tpope/vim-surround'
+
+    " Buffers & Footers
+    Plug 'hoob3rt/lualine.nvim'
+    Plug 'akinsho/nvim-bufferline.lua'
+    Plug 'kyazdani42/nvim-web-devicons'
+
+    " Colour Scheme
+    Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
+    Plug 'bluz71/vim-nightfly-guicolors'
 call plug#end()
 
 " project specific config files
@@ -42,19 +53,6 @@ set softtabstop=0
 set shiftwidth=4
 set expandtab
 set smarttab
-
-autocmd BufRead,BufNewFile *.js,*.ts,*.vue set tabstop=2
-autocmd BufRead,BufNewFile *.js,*.ts,*.vue set shiftwidth=2
-autocmd BufRead,BufNewFile *.js,*.vue set noexpandtab
-autocmd BufRead,BufNewFile *.ts set expandtab
-
-autocmd BufRead,BufNewFile *.yml,*.yaml,*.hcl set tabstop=2
-autocmd BufRead,BufNewFile *.yml,*.yaml,*.hcl set shiftwidth=2
-autocmd BufRead,BufNewFile *.yml,*.yaml,*.hcl set expandtab
-
-autocmd BufRead,BufNewFile *.py set tabstop=2
-autocmd BufRead,BufNewFile *.py set shiftwidth=2
-autocmd BufRead,BufNewFile *.py set noexpandtab
 
 " Deleting
 set backspace=indent,eol,start  " easy delete
@@ -72,9 +70,6 @@ set undolevels=1000
 set undoreload=10000
 
 " Folding
-" set foldenable
-" set foldmethod=indent
-" set foldlevel=100
 set nofoldenable
 
 " Search
@@ -101,33 +96,42 @@ set shada=!,'100,<100,:100,s10,%,h "viminfo
 set noerrorbells
 
 " Theme
-colorscheme pablo
-highlight CocFloating guibg=none guifg=none
+set termguicolors
+let g:tokyonight_style = "night"
+let g:tokyonight_italic_functions = 1
+let g:tokyonight_transparent = 1
+colorscheme tokyonight
+" let g:nightflyTransparent = 1
+" colorscheme nightfly
+" colorscheme moonfly
+
+" colorscheme pablo
+highlight Normal guifg=#fa9500
+highlight SignColumn guibg=#3b4261
+highlight CocFloating guibg=darkred guifg=black
 highlight Pmenu ctermbg=gray guibg=gray
 highlight Search ctermbg=darkblue
 highlight Search ctermfg=white
+highlight CocFloating ctermbg=darkred ctermfg=black
+highlight CocWarningFloat ctermbg=darkred ctermfg=black
+highlight CocErrorFloat ctermbg=darkred ctermfg=black
+highlight CocFadeOut guifg=#e62020
+
 
 " Spelling
-"autocmd BufEnter *.txt :setlocal spell spelllang=en_gb
-"autocmd BufEnter *.md :setlocal spell spelllang=en_gb
 set nospell
 
 " Status bar
-set showmode
-set laststatus=1
-" set display=
-set display+=lastline
+" See lualine below
 
-" title bar
+" Title bar
 set title
 
-" Copy
+" Copy & Paste
 " whole file to system buffer
 nmap <Leader>y :%y+<cr>
 " visual selected to system buffer
 vmap <silent> <Leader>c "+y<cr>
-
-" Paste
 set textwidth=0
 
 " Spacing
@@ -155,9 +159,11 @@ augroup END
 
 let c_space_errors = 1
 
+" Gutter
 " Always show the signcolumn, otherwise it would shift the text each time
 " diagnostics appear/become resolved.
 set signcolumn=yes
+set updatetime=100
 
 " Indenting
 set autoindent
@@ -170,10 +176,18 @@ cnoremap <c-a> <home>
 cnoremap <c-e> <end>
 
 " Buffers
+:lua << EOF
+require("bufferline").setup{
+    options = {
+        show_close_icon = false,
+        separator_style = "thin",
+        max_name_length = 30
+    }
+}
+EOF
 map <silent> <C-Left> :bprevious<CR>
 map <silent> <C-Right> :bnext<CR>
 set hidden " Allow navigation between buffers without saving
-
 
 " Numbering
 nmap <silent> <C-N> :set invrelativenumber<CR>
@@ -185,12 +199,21 @@ set nojoinspaces " Better J joins
 autocmd BufWinEnter * set formatoptions+=j " better joins with comments
 
 " Filetypes
+autocmd BufRead,BufNewFile *.js,*.ts,*.vue set tabstop=2
+autocmd BufRead,BufNewFile *.js,*.ts,*.vue set shiftwidth=2
+autocmd BufRead,BufNewFile *.js,*.vue set noexpandtab
+autocmd BufRead,BufNewFile *.ts set expandtab
+
+autocmd BufRead,BufNewFile *.yml,*.yaml,*.hcl set tabstop=2
+autocmd BufRead,BufNewFile *.yml,*.yaml,*.hcl set shiftwidth=2
+autocmd BufRead,BufNewFile *.yml,*.yaml,*.hcl set expandtab
+
+autocmd BufRead,BufNewFile *.py set tabstop=2
+autocmd BufRead,BufNewFile *.py set shiftwidth=2
+autocmd BufRead,BufNewFile *.py set noexpandtab
+
 " vue
 autocmd BufEnter *.vue :syntax sync fromstart
-" autocmd BufEnter *.vue :set omnifunc=xmlcomplete#CompleteTags
-
-" Shortcuts
-
 
 " blade
 augroup blade_ft
@@ -268,17 +291,6 @@ nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
-highlight CocFloating ctermbg=darkred ctermfg=black
-highlight CocWarningFloat ctermbg=darkred ctermfg=black
-highlight CocErrorFloat ctermbg=darkred ctermfg=black
-
-
-" airline config
-let g:airline_theme='jellybeans'
-let g:airline#extensions#branch#enabled = 1
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#buffer_min_count = 2
-
 " CtrlP config
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*/\.git/*,*/vendor/*,*/node_modules/*
 let g:ctrlp_custom_ignore = {
@@ -309,9 +321,6 @@ xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 nmap <silent><leader>= vipga=
 
-" gitgutter
-nmap <silent> <C-t> :GitGutterToggle<CR>
-
 vmap <silent> <C-s> :sort<CR>
 
 " Prettier
@@ -332,3 +341,41 @@ autocmd InsertLeave *.js PrettierAsync
 "    \ 'valid_exit_codes': [0,1]
 "    \ }
 "let g:neoformat_enabled_php = ['psr12']
+
+" Lualine
+:lua << EOF
+require('lualine').setup {
+    options = {
+        icons_enabled = true,
+        theme = 'tokyonight',
+        component_separators = {'', ''},
+        section_separators = {'', ''},
+        disabled_filetypes = {}
+  },
+  sections = {
+    lualine_a = {'mode'},
+    lualine_b = {'branch', 'diff'},
+    lualine_c = {'filename'},
+    lualine_x = {'g:coc_status', 'encoding', 'fileformat', 'filetype'},
+        --[[
+        {'diagnostics', sources = {"nvim_lsp"}},
+        'encoding',
+        'fileformat',
+        'filetype'
+        },
+        ]]
+    lualine_y = {'progress'},
+    lualine_z = {'location'}
+  },
+  inactive_sections = {
+    lualine_a = {},
+    lualine_b = {},
+    lualine_c = {'filename'},
+    lualine_x = {'location'},
+    lualine_y = {},
+    lualine_z = {}
+  },
+  tabline = {},
+  extensions = {}
+}
+EOF
