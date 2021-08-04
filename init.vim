@@ -7,7 +7,7 @@ autocmd BufEnter * :syntax sync fromstart
 call plug#begin('~/.vim/plugged')
     " Language specfic
     Plug 'hashivim/vim-terraform', { 'for': 'terraform' }
-    Plug 'jvirtanen/vim-hcl',
+    Plug 'jvirtanen/vim-hcl', { 'for': ['terraform', 'hcl'] }
     Plug 'fatih/vim-go', { 'for': 'go', 'do': ':GoUpdateBinaries' }
     Plug 'lvht/phpcd.vim', { 'for': 'php', 'do': 'composer install' }
     Plug 'noahfrederick/vim-composer', { 'for': 'php' }
@@ -23,8 +23,16 @@ call plug#begin('~/.vim/plugged')
     Plug 'rhysd/committia.vim'
     Plug 'tpope/vim-fugitive'
 
+    " LSP & Code completion
+    Plug 'neoclide/coc.nvim', {'branch': 'release', 'for': ['javascript', 'vue', 'typescript'] }
+    Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+    " Plug 'neovim/nvim-lspconfig', { 'for': ['php'] }
+    " Plug 'hrsh7th/nvim-compe', { 'for': ['php'] }
+    " vim-vsnip adds parentheses on completion
+    " Plug 'hrsh7th/vim-vsnip', { 'for': ['php'] }
+    Plug 'folke/which-key.nvim'
+
     " Utils
-    Plug 'neoclide/coc.nvim', {'branch': 'release'}
     Plug 'Yggdroot/indentLine'
     Plug 'ctrlpvim/ctrlp.vim'
     Plug 'honza/vim-snippets'
@@ -36,11 +44,11 @@ call plug#begin('~/.vim/plugged')
     " Buffers & Footers
     Plug 'hoob3rt/lualine.nvim'
     Plug 'akinsho/nvim-bufferline.lua'
-    Plug 'kyazdani42/nvim-web-devicons'
 
-    " Colour Scheme
+    " Colour Scheme & Icons
     Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
-    Plug 'bluz71/vim-nightfly-guicolors'
+    Plug 'kyazdani42/nvim-web-devicons'
+    " Plug 'bluz71/vim-nightfly-guicolors'
 call plug#end()
 
 " project specific config files
@@ -101,21 +109,17 @@ let g:tokyonight_style = "night"
 let g:tokyonight_italic_functions = 1
 let g:tokyonight_transparent = 1
 colorscheme tokyonight
-" let g:nightflyTransparent = 1
-" colorscheme nightfly
-" colorscheme moonfly
-
 " colorscheme pablo
+"
 highlight Normal guifg=#fa9500
 highlight SignColumn guibg=#3b4261
-highlight CocFloating guibg=darkred guifg=black
-highlight Pmenu ctermbg=gray guibg=gray
-highlight Search ctermbg=darkblue
-highlight Search ctermfg=white
-highlight CocFloating ctermbg=darkred ctermfg=black
-highlight CocWarningFloat ctermbg=darkred ctermfg=black
-highlight CocErrorFloat ctermbg=darkred ctermfg=black
-highlight CocFadeOut guifg=#e62020
+"highlight CocFloating guibg=darkred guifg=black
+" highlight Pmenu ctermbg=gray guibg=gray
+" highlight Search ctermbg=darkblue ctermfg=white
+"highlight CocFloating ctermbg=darkred ctermfg=black
+"highlight CocWarningFloat ctermbg=darkred ctermfg=black
+"highlight CocErrorFloat ctermbg=darkred ctermfg=black
+"highlight CocFadeOut guifg=#e62020
 
 
 " Spelling
@@ -187,7 +191,9 @@ require("bufferline").setup{
 EOF
 map <silent> <C-Left> :bprevious<CR>
 map <silent> <C-Right> :bnext<CR>
-set hidden " Allow navigation between buffers without saving
+" Allow navigation between buffers without saving
+set hidden
+map <silent> <C-X> :bd<CR>
 
 " Numbering
 nmap <silent> <C-N> :set invrelativenumber<CR>
@@ -256,40 +262,54 @@ augroup END
 
 
 " Coc config
-let g:coc_global_extensions=[ 'coc-html', 'coc-prettier', 'coc-eslint', 'coc-json', 'coc-css', 'coc-vetur', 'coc-tsserver', 'coc-lists', 'coc-highlight', 'coc-go', 'coc-python', 'coc-tailwindcss', 'coc-lua' ]
+if exists('g:plugs["coc.nvim"]')
+    let g:coc_global_extensions=[ 'coc-html', 'coc-prettier', 'coc-eslint', 'coc-json', 'coc-css', 'coc-vetur', 'coc-tsserver', 'coc-lists', 'coc-highlight', 'coc-go', 'coc-python', 'coc-tailwindcss', 'coc-lua' ]
 
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? coc#_select_confirm() :
-      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
+    inoremap <silent><expr> <TAB>
+          \ pumvisible() ? coc#_select_confirm() :
+          \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+          \ <SID>check_back_space() ? "\<TAB>" :
+          \ coc#refresh()
 
-nmap <silent><c-down> <Plug>(coc-diagnostic-next)
-nmap <silent><c-up> <Plug>(coc-diagnostic-prev)
-nmap <silent><nowait> <leader>e :<C-u>CocList diagnostics<cr>
-nmap <silent><leader>f <Plug>(coc-codeaction)
+    nmap <silent><c-down> <Plug>(coc-diagnostic-next)
+    nmap <silent><c-up> <Plug>(coc-diagnostic-prev)
+    nmap <silent><nowait> <leader>e :<C-u>CocList diagnostics<cr>
+    nmap <silent><leader>f <Plug>(coc-codeaction)
 
-nnoremap  :call <SID>show_documentation()<CR>
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
+    nnoremap  :call <SID>show_documentation()<CR>
+    function! s:show_documentation()
+      if (index(['vim','help'], &filetype) >= 0)
+        execute 'h '.expand('<cword>')
+      else
+        call CocAction('doHover')
+      endif
+    endfunction
+
+    function! s:check_back_space() abort
+      let col = col('.') - 1
+      return !col || getline('.')[col - 1]  =~# '\s'
+    endfunction
+
+    let g:coc_snippet_next = '<tab>'
+    let g:coc_node_path = '/usr/local/bin/node'
+    nmap <silent> gd <Plug>(coc-definition)
+    nmap <silent> gy <Plug>(coc-type-definition)
+    nmap <silent> gi <Plug>(coc-implementation)
+    nmap <silent> gr <Plug>(coc-references)
+endif
+
+lua << EOF
+EOF
+
+
+" Close quickfix list on enter
+autocmd FileType qf nnoremap <buffer> <CR> <CR>:cclose<CR>:lclose<CR>
+
+" Reduce height of quickfix to minimum of 3 lines, max 10 lines
+autocmd FileType qf call AdjustWindowHeight(3, 10)
+function! AdjustWindowHeight(minheight, maxheight)
+  exe max([min([line("$"), a:maxheight]), a:minheight]) . "wincmd _"
 endfunction
-
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-let g:coc_snippet_next = '<tab>'
-let g:coc_node_path = '/usr/local/bin/node'
-
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
 
 " CtrlP config
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*/\.git/*,*/vendor/*,*/node_modules/*
@@ -343,7 +363,7 @@ autocmd InsertLeave *.js PrettierAsync
 "let g:neoformat_enabled_php = ['psr12']
 
 " Lualine
-:lua << EOF
+lua << EOF
 require('lualine').setup {
     options = {
         icons_enabled = true,
@@ -356,14 +376,7 @@ require('lualine').setup {
     lualine_a = {'mode'},
     lualine_b = {'branch', 'diff'},
     lualine_c = {'filename'},
-    lualine_x = {'g:coc_status', 'encoding', 'fileformat', 'filetype'},
-        --[[
-        {'diagnostics', sources = {"nvim_lsp"}},
-        'encoding',
-        'fileformat',
-        'filetype'
-        },
-        ]]
+    lualine_x = {'g:coc_status', {'diagnostics', sources = {"nvim_lsp"}}, 'encoding', 'fileformat', 'filetype'},
     lualine_y = {'progress'},
     lualine_z = {'location'}
   },
@@ -378,4 +391,223 @@ require('lualine').setup {
   tabline = {},
   extensions = {}
 }
+EOF
+
+if exists('g:plugs["nvim-compe"]')
+lua << EOF
+    -- Compe setup
+    require'compe'.setup {
+      enabled = true;
+      autocomplete = true;
+      debug = false;
+      min_length = 1;
+      preselect = 'enable';
+      throttle_time = 80;
+      source_timeout = 200;
+      incomplete_delay = 400;
+      max_abbr_width = 100;
+      max_kind_width = 100;
+      max_menu_width = 100;
+      documentation = true;
+
+      source = {
+        path = true;
+        nvim_lsp = true;
+        treesitter = true;
+        buffer = true;
+      };
+    }
+
+    local t = function(str)
+      return vim.api.nvim_replace_termcodes(str, true, true, true)
+    end
+
+    local check_back_space = function()
+        local col = vim.fn.col('.') - 1
+        if col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') then
+            return true
+        else
+            return false
+        end
+    end
+
+    -- Use (s-)tab to:
+    --- move to prev/next item in completion menuone
+    --- jump to prev/next snippet's placeholder
+    _G.tab_complete = function()
+      if vim.fn.pumvisible() == 1 then
+        return t "<C-n>"
+      elseif check_back_space() then
+        return t "<Tab>"
+      else
+        return vim.fn['compe#complete']()
+      end
+    end
+    _G.s_tab_complete = function()
+      if vim.fn.pumvisible() == 1 then
+        return t "<C-p>"
+      else
+        return t "<S-Tab>"
+      end
+    end
+
+    vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", {expr = true})
+    vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", {expr = true})
+    vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
+    vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
+
+    --This line is important for auto-import
+    vim.api.nvim_set_keymap('i', '<cr>', 'compe#confirm("<cr>")', { expr = true })
+    vim.api.nvim_set_keymap('i', '<c-space>', 'compe#complete()', { expr = true })
+EOF
+endif
+
+if exists('g:plugs["nvim-lspconfig"]')
+lua << EOF
+    local nvim_lsp = require('lspconfig')
+    -- vim.lsp.set_log_level("debug")
+
+    -- setup gutter icons
+    local signs = { Error = " ", Warning = " ", Hint = " ", Information = " " }
+    for type, icon in pairs(signs) do
+        local hl = "LspDiagnosticsSign" .. type
+        vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
+    end
+
+    -- icons
+    local M = {}
+    M.icons = {
+        Class = " ",
+        Color = " ",
+        Constant = " ",
+        Constructor = " ",
+        Enum = "了 ",
+        EnumMember = " ",
+        Field = " ",
+        File = " ",
+        Folder = " ",
+        Function = " ",
+        Interface = "ﰮ ",
+        Keyword = " ",
+        Method = "ƒ ",
+        Module = " ",
+        Property = " ",
+        Snippet = "﬌ ",
+        Struct = " ",
+        Text = " ",
+        Unit = " ",
+        Value = " ",
+        Variable = " ",
+        }
+
+    local kinds = vim.lsp.protocol.CompletionItemKind
+    for i, kind in ipairs(kinds) do
+        kinds[i] = M.icons[kind] or kind
+    end
+
+    local on_attach_func = function(client)
+        local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(0, ...) end
+        local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+        -- Mappings.
+        local opts = { noremap=true, silent=true }
+        -- buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+
+    end
+
+    -- Add parentheses on completion
+    local capabilities = vim.lsp.protocol.make_client_capabilities()
+    capabilities.textDocument.completion.completionItem.snippetSupport = true
+    capabilities.textDocument.completion.completionItem.resolveSupport = {
+        properties = {
+            'documentation',
+            'detail',
+            'additionalTextEdits',
+        }
+    }
+
+    -- local servers = { "intelephense", "denols", "tsserver" }
+    local servers = { "intelephense", "tsserver" }
+    for _, lsp in ipairs(servers) do
+      nvim_lsp[lsp].setup {
+        on_attach = on_attach_func,
+        capabilities = capabilities,
+        flags = {
+          debounce_text_changes = 150,
+        }
+      }
+    end
+
+    nvim_lsp.diagnosticls.setup {
+      on_attach = on_attach,
+      filetypes = { 'javascript', 'javascriptreact', 'json', 'typescript', 'typescriptreact', 'css', 'less', 'scss', 'markdown', 'pandoc' },
+      init_options = {
+        linters = {
+          eslint = {
+            command = 'eslint_d',
+            rootPatterns = { '.git' },
+            debounce = 100,
+            args = { '--stdin', '--stdin-filename', '%filepath', '--format', 'json' },
+            sourceName = 'eslint_d',
+            parseJson = {
+              errorsRoot = '[0].messages',
+              line = 'line',
+              column = 'column',
+              endLine = 'endLine',
+              endColumn = 'endColumn',
+              message = '[eslint] ${message} [${ruleId}]',
+              security = 'severity'
+            },
+            securities = {
+              [2] = 'error',
+              [1] = 'warning'
+            }
+          },
+        },
+        filetypes = {
+          javascript = 'eslint',
+          javascriptreact = 'eslint',
+          typescript = 'eslint',
+          typescriptreact = 'eslint',
+        },
+        formatters = {
+          eslint_d = {
+            command = 'eslint_d',
+            args = { '--stdin', '--stdin-filename', '%filename', '--fix-to-stdout' },
+            rootPatterns = { '.git' },
+          },
+          prettier = {
+            command = 'prettier',
+            args = { '--stdin-filepath', '%filename' }
+          }
+        },
+        formatFiletypes = {
+          css = 'prettier',
+          javascript = 'eslint_d',
+          javascriptreact = 'eslint_d',
+          json = 'prettier',
+          scss = 'prettier',
+          less = 'prettier',
+          typescript = 'eslint_d',
+          typescriptreact = 'eslint_d',
+          json = 'prettier',
+          markdown = 'prettier',
+        }
+      }
+    }
+EOF
+    " set completeopt=menuone,noinsert,noselect
+    set shortmess+=c
+    nnoremap <silent> <cmd>lua vim.lsp.buf.hover()<CR>
+    nmap <silent>gd <cmd>lua vim.lsp.buf.definition()<CR>
+    nmap <silent><c-up> <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
+    nmap <silent><c-down> <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
+    nmap <silent><leader>f <cmd>lua vim.lsp.buf.code_action()<CR>
+    autocmd User CompeConfirmDone :lua vim.lsp.buf.signature_help()
+endif
+lua << EOF
+  require("which-key").setup {
+    -- your configuration comes here
+    -- or leave it empty to use the default settings
+    -- refer to the configuration section below
+  }
 EOF
