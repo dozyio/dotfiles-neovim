@@ -30,6 +30,7 @@
       }
     }
   },
+  "vetur.ignoreProjectWarning": true,
   "tailwindCSS.headwind.removeDuplicates": true,
   "tailwindCSS.headwind.defaultSortOrder": [],
   "coc.preferences.formatOnSaveFiletypes": [""]

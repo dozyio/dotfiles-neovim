@@ -11,8 +11,9 @@ call plug#begin('~/.vim/plugged')
     Plug 'lvht/phpcd.vim', { 'for': 'php', 'do': 'composer install' }
     Plug 'noahfrederick/vim-composer', { 'for': 'php' }
     Plug 'noahfrederick/vim-laravel', { 'for': 'php' }
-    Plug 'prettier/vim-prettier', { 'do': 'yarn install', 'for': ['javascript', 'vue', 'typescript'] }
+    " Plug 'prettier/vim-prettier', { 'do': 'yarn install', 'for': ['javascript', 'vue', 'typescript'] }
     Plug 'chr4/nginx.vim', { 'for': 'nginx' }
+    " Plug 'phpactor/phpactor', {'for': 'php', 'tag': '*', 'do': 'composer install --no-dev -o'}
 
     " probably remove
     " Plug 'jvirtanen/vim-hcl', { 'for': ['terraform', 'hcl'] }
@@ -26,9 +27,9 @@ call plug#begin('~/.vim/plugged')
     Plug 'tpope/vim-fugitive'
 
     " LSP & Code completion
-    " Plug 'neoclide/coc.nvim', {'branch': 'release', 'for': ['javascript', 'vue', 'typescript'] }
-    Plug 'neovim/nvim-lspconfig'
-    Plug 'hrsh7th/nvim-compe'
+    Plug 'neoclide/coc.nvim', {'branch': 'release'}
+    " Plug 'neovim/nvim-lspconfig'
+    " Plug 'hrsh7th/nvim-compe'
     " vim-vsnip adds parentheses on completion
     Plug 'hrsh7th/vim-vsnip'
     Plug 'nvim-lua/lsp-status.nvim'
@@ -45,10 +46,14 @@ call plug#begin('~/.vim/plugged')
     Plug 'tpope/vim-dispatch'
     Plug 'tpope/vim-obsession'
     Plug 'tpope/vim-surround'
-    Plug 'tpope/vim-dadbod'
-    Plug 'kristijanhusak/vim-dadbod-ui'
-    Plug 'kristijanhusak/vim-dadbod-completion'
+    " Plug 'tpope/vim-dadbod'
+    " Plug 'kristijanhusak/vim-dadbod-ui'
+    " Plug 'kristijanhusak/vim-dadbod-completion'
     Plug 'folke/which-key.nvim'
+    Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
+
+    " Testing
+    Plug 'janko-m/vim-test'
 
     " Buffers & Footers
     " Plug 'hoob3rt/lualine.nvim'
@@ -99,6 +104,7 @@ nmap <Leader><space> :nohlsearch<cr>
 
 " Mouse
 " set mousemodel=popup
+"set mouse=n
 set mouse=
 
 " Misc
@@ -187,11 +193,21 @@ nmap <silent><nowait> <A-Up> :wincmd k<CR>
 nmap <silent><nowait> <A-Down> :wincmd j<CR>
 nmap <silent><nowait> <A-Left> :wincmd h<CR>
 nmap <silent><nowait> <A-Right> :wincmd l<CR>
+" navigate in terminal
+tnoremap <silent><nowait> <C-Left> <C-\><C-N>:bprevious<CR>
+tnoremap <silent><nowait> <C-Right> <C-\><C-N>:bnext<CR>
+" Exit terminal mode
+tnoremap <Esc> <C-\><C-n>
 " navigate hunks
 nmap <silent><nowait> <C-]> <Plug>(GitGutterNextHunk)
 nmap <silent><nowait> <C-[> <Plug>(GitGutterPrevHunk)
+
 " close buffer / window
 nmap <silent> <C-X> :bd<CR>
+nmap <silent><nowait> <leader>n :Vexplore<CR>
+
+" Git diff
+nmap <silent><nowait><leader>g :Gdiffsplit!<CR>
 
 " Numbering
 nmap <silent> <C-N> :set invrelativenumber<CR>
@@ -319,6 +335,16 @@ if exists('g:plugs["ctrlp.vim"]')
     endif
 endif
 
+" Testing
+let test#strategy = "neovim"
+let test#neovim#term_position = "vert botright"
+nmap <leader>t :w<CR> :TestFile<CR>
+nmap <leader>T :w<CR> :TestSuite<CR>
+nmap <leader>c :w<CR> :TestNearest<CR>
+if has('nvim')
+  tmap <C-o> <C-\><C-n>
+endif
+
 " Dispatch shortcuts
 nmap <leader>m :w<CR> :Make<CR>
 
@@ -409,6 +435,16 @@ lua << EOF
     local gl = require('galaxyline')
     local colors = require('galaxyline.theme').default
     local condition = require('galaxyline.condition')
+
+    local function get_coc_lsp()
+        local f, status = pcall(vim.api.nvim_get_var, 'coc_status')
+        if not f or status == '' then
+            return nil
+        else
+            return status
+        end
+    end
+
     local gls = gl.section
     gl.short_line_list = {'NvimTree','vista','dbui','packer'}
 
@@ -537,6 +573,14 @@ lua << EOF
       }
     }
 
+    gls.mid[2] = {
+        CocStatus = {
+            provider = function() return vim.g.coc_status end,
+            -- condition = vim.fn.exists('g:coc_status') == 1,
+            highlight= { colors.yellow, colors.bg, 'bold' }
+        }
+    }
+
     gls.right[1] = {
       FileEncode = {
         provider = 'FileEncode',
@@ -601,6 +645,12 @@ lua << EOF
     }
 
     gls.right[8] = {
+        Obession = {
+            provider = function () return vim.fn.ObsessionStatus() end
+        }
+    }
+
+    gls.right[9] = {
       RainbowBlue = {
         provider = function() return ' ▊' end,
         highlight = {colors.blue,colors.bg}
@@ -657,7 +707,7 @@ lua << EOF
     require'compe'.setup {
       enabled = true;
       autocomplete = true;
-      debug = true;
+      debug = false;
       min_length = 1;
       preselect = 'enable';
       throttle_time = 80;
@@ -761,6 +811,10 @@ lua << EOF
       }
     end
 
+    -- nvim_lsp.vuels.setup {}
+
+    nvim_lsp.yamlls.setup {}
+    --[[
     nvim_lsp.diagnosticls.setup {
       on_attach = on_attach,
       filetypes = { 'javascript', 'javascriptreact', 'json', 'typescript', 'typescriptreact', 'css', 'less', 'scss', 'markdown', 'pandoc' },
@@ -818,6 +872,7 @@ lua << EOF
         }
       }
     }
+    ]]
 
     -- setup gutter icons
     local signs = { Error = " ", Warning = " ", Hint = " ", Information = " " }
@@ -858,7 +913,7 @@ lua << EOF
     end
 EOF
     set completeopt=menuone,noinsert
-    " set shortmess+=c
+    set shortmess+=c
     nnoremap <silent> <cmd>lua vim.lsp.buf.hover()<CR>
     nmap <silent>gd <cmd>lua vim.lsp.buf.definition()<CR>
     nmap <silent><c-up> <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
@@ -876,7 +931,7 @@ lua <<EOF
             -- additional_vim_regex_highlighting = true
         },
         indent = {
-            enable = true,
+            enable = false,
         },
         rainbow = {
             enable = true,
@@ -918,6 +973,7 @@ lua << EOF
         ["<leader>y"] = { name="Copy whole file to OS copy buffer" },
         ["<leader>d"] = { name="DB UI" },
         ["<leader>h"] = { name="Git hunk" },
+        ["<leader>g"] = { name="Git diff" },
         ["<C-]>"] = { name="Next hunk" },
         ["<C-[>"] = { name="Previous hunk" },
         ["<C-Right>"] = { name="Next buffer" },
