@@ -31,7 +31,13 @@
     }
   },
   "vetur.ignoreProjectWarning": true,
+  "vetur.experimental.templateInterpolationService": false,
+  "vetur.validation.templateProps": true,
+  "vetur.completion.autoImport": true,
   "tailwindCSS.headwind.removeDuplicates": true,
   "tailwindCSS.headwind.defaultSortOrder": [],
-  "coc.preferences.formatOnSaveFiletypes": [""]
+  "coc.preferences.formatOnSaveFiletypes": [""],
+  "phpactor.enable": true,
+  "phpactor.path": "/usr/local/bin/phpactor",
+  "coc.preferences.formatOnType": true
 }

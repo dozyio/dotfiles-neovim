@@ -51,6 +51,8 @@ call plug#begin('~/.vim/plugged')
     " Plug 'kristijanhusak/vim-dadbod-completion'
     Plug 'folke/which-key.nvim'
     Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
+    Plug 'tpope/vim-projectionist'
+    Plug 'ntpeters/vim-better-whitespace'
 
     " Testing
     Plug 'janko-m/vim-test'
@@ -131,6 +133,7 @@ highlight SignColumn guibg=#3b4261
 
 " Spelling
 set nospell
+nnoremap <Leader>s :%s/\<<C-r><C-w>\>/
 
 " Title bar
 set title
@@ -248,7 +251,7 @@ autocmd FileType yaml setlocal shiftwidth=2 softtabstop=2 expandtab
 augroup go
   autocmd!
   autocmd BufNewFile,BufRead *.go let g:go_highlight_extra_types = 1
-  autocmd BufNewFile,BufRead *.go let g:go_highlight_structs = 1 
+  autocmd BufNewFile,BufRead *.go let g:go_highlight_structs = 1
   autocmd BufNewFile,BufRead *.go let g:go_highlight_functions = 1
   autocmd BufNewFile,BufRead *.go let g:go_highlight_function_calls = 1
   autocmd BufNewFile,BufRead *.go let g:go_highlight_function_parameters = 1
@@ -276,7 +279,7 @@ augroup END
 
 " Coc config
 if exists('g:plugs["coc.nvim"]')
-    let g:coc_global_extensions=[ 'coc-html', 'coc-prettier', 'coc-eslint', 'coc-json', 'coc-css', 'coc-vetur', 'coc-tsserver', 'coc-lists', 'coc-highlight', 'coc-go', 'coc-python', 'coc-tailwindcss', 'coc-lua' ]
+    let g:coc_global_extensions=[ 'coc-html', 'coc-prettier', 'coc-eslint', 'coc-eslint8', 'coc-json', 'coc-css', 'coc-vetur', 'coc-tsserver', 'coc-lists', 'coc-highlight', 'coc-go', 'coc-python', 'coc-tailwindcss', 'coc-lua' ]
 
     inoremap <silent><expr> <TAB>
           \ pumvisible() ? coc#_select_confirm() :
@@ -323,9 +326,9 @@ endfunction
 
 " CtrlP config
 if exists('g:plugs["ctrlp.vim"]')
-    set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*/\.git/*,*/vendor/*,*/node_modules/*
+    set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*/\.git/*,*/vendor/*,*/node_modules/*,*/phpunit/*
     let g:ctrlp_custom_ignore = {
-      \ 'dir':  '\v[\/]\.(git|hg|svn)$',
+      \ 'dir':  '\v[\/]\.(git|hg|svn|tests/coverage)$',
       \ 'file': '\v\.(exe|so|dll)$',
       \ }
     let g:ctrlp_match_window = 'bottom,order:ttb,min:1,max:30,results:30'
@@ -333,17 +336,23 @@ if exists('g:plugs["ctrlp.vim"]')
     if executable('ag')
         let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
     endif
+    let g:ctrlp_map = '<c-p>'
+    let g:ctrlp_cmd = 'CtrlPMRU'
 endif
 
 " Testing
 let test#strategy = "neovim"
 let test#neovim#term_position = "vert botright"
-nmap <leader>t :w<CR> :TestFile<CR>
-nmap <leader>T :w<CR> :TestSuite<CR>
-nmap <leader>c :w<CR> :TestNearest<CR>
+let test#php#phpunit#executable = "vendor/bin/paratest"
+nmap <leader>t :w<CR> :let test#php#phpunit#executable = 'vendor/bin/paratest'<CR> :TestFile<CR>
+nmap <leader>T :w<CR> :let test#php#phpunit#executable = 'vendor/bin/paratest'<CR> :TestSuite<CR>
+nmap <leader>c :w<CR> :let test#php#phpunit#executable = 'vendor/bin/phpunit'<CR> :TestNearest<CR>
 if has('nvim')
   tmap <C-o> <C-\><C-n>
 endif
+
+" Projectionist
+nmap <leader>a :A<CR>
 
 " Dispatch shortcuts
 nmap <leader>m :w<CR> :Make<CR>
@@ -368,11 +377,13 @@ vmap <silent> <C-s> :sort<CR>
 " Prettier
 " autocmd TextChanged,InsertLeave *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.svelte,*.yaml,*.html PrettierAsync
 " Prettier
-" command! -nargs=0 Prettier :call CocAction('runCommand', 'prettier.formatFile')
+command! -nargs=0 Prettier :call CocAction('runCommand', 'prettier.formatFile')
 let g:prettier#autoformat = 0
 let g:prettier#quickfix_enabled = 0
 let g:prettier#exec_cmd_async = 1
-" autocmd InsertLeave *.js PrettierAsync
+vmap <leader>p :CocCommand prettier.formatFile<CR>
+nmap <leader>p :CocCommand prettier.formatFile<CR>
+autocmd InsertLeave *.js,*.jsx Prettier
 
 " let g:neoformat_php_psr12 = {
 "    \ 'exe': 'phpcbf',
@@ -814,6 +825,7 @@ lua << EOF
     -- nvim_lsp.vuels.setup {}
 
     nvim_lsp.yamlls.setup {}
+
     --[[
     nvim_lsp.diagnosticls.setup {
       on_attach = on_attach,
