@@ -1,0 +1,7 @@
+require 'lsp_signature'.setup()
+require('bufferline.settings')
+require('galaxyline.settings')
+require('lsp.settings')
+require('treesitter.settings')
+require('which-key.settings')
+require('hop.settings')

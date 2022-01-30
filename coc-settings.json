@@ -24,18 +24,62 @@
             "insertUseDeclaration": true,
             "fullyQualifyGlobalConstantsAndFunctions": false,
             "triggerParameterHints": true,
-            "maxItems": 100
+            "maxItems": 500
+          },
+          "telemetry": {
+              "enabled": false
           }
+        }
+      }
+    },
+    "tailwind-lsp": {
+      "command": "tailwindcss-language-server",
+      "args": ["--stdio"],
+
+      "filetypes": [
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact",
+        "html",
+        "gohtmltmpl"
+      ],
+
+      "rootPatterns": [
+        "tailwind.config.js",
+        "tailwind.config.ts",
+        "postcss.config.js",
+        "postcss.config.ts",
+        "package.json",
+        "node_modules",
+        ".git"
+      ],
+
+      "settings": {
+        "tailwindCSS": {
+          "validate": true,
+          "lint": {
+            "cssConflict": "warning",
+            "invalidApply": "error",
+            "invalidScreen": "error",
+            "invalidVariant": "error",
+            "invalidConfigPath": "error",
+            "invalidTailwindDirective": "error",
+            "recommendedVariantOrder": "warning"
+          },
+          "classAttributes": ["class", "className", "classList", "ngClass"],
+          "experimental": {}
         }
       }
     }
   },
+  "suggest.maxCompleteItemCount": 300,
   "vetur.ignoreProjectWarning": true,
   "vetur.experimental.templateInterpolationService": false,
   "vetur.validation.templateProps": true,
   "vetur.completion.autoImport": true,
   "tailwindCSS.headwind.removeDuplicates": true,
-  "tailwindCSS.headwind.defaultSortOrder": [],
+  "tailwindCSS.headwind.runOnSave": false,
   "coc.preferences.formatOnSaveFiletypes": [""],
   "phpactor.enable": true,
   "phpactor.path": "/usr/local/bin/phpactor",
