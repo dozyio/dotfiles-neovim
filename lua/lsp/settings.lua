@@ -15,13 +15,14 @@ local on_attach = function(_, bufnr)
     buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
     local opts = { noremap=true, silent=true }
-    -- Mappings.
+    -- Mappings
     buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
     buf_set_keymap('n', '<c-up>', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
     buf_set_keymap('n', '<c-down>', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
     buf_set_keymap('n', '<leader>f', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
     buf_set_keymap('n', '<leader>x', '<cmd>TroubleToggle<CR>', opts)
-
+    -- ctrl + / to show function docs
+    buf_set_keymap('n', '', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
 end
 
 local has_words_before = function()
