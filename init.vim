@@ -24,6 +24,8 @@ call plug#begin('~/.vim/plugged')
     Plug 'airblade/vim-gitgutter'
     Plug 'rhysd/committia.vim'
     Plug 'tpope/vim-fugitive'
+    " View history
+    Plug 'junegunn/gv.vim'
 
     " LSP & Code completion
     " Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -41,6 +43,12 @@ call plug#begin('~/.vim/plugged')
     Plug 'nvim-lua/lsp-status.nvim'
     Plug 'folke/trouble.nvim'
     Plug 'ray-x/lsp_signature.nvim'
+
+    " Telescope
+    Plug 'nvim-lua/popup.nvim'
+    Plug 'nvim-lua/plenary.nvim'
+    Plug 'nvim-telescope/telescope.nvim'
+    Plug 'nvim-telescope/telescope-fzy-native.nvim'
 
     " Treesitter
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
@@ -63,7 +71,6 @@ call plug#begin('~/.vim/plugged')
     Plug 'dozyio/vim-better-whitespace'
     " floating terminal with F12
     Plug 'voldikss/vim-floaterm'
-    Plug 'phaazon/hop.nvim'
 
     " Testing
     Plug 'janko-m/vim-test'
@@ -73,6 +80,9 @@ call plug#begin('~/.vim/plugged')
 
     " Buffers
     Plug 'akinsho/nvim-bufferline.lua'
+
+    " Undo
+    Plug 'mbbill/undotree'
 
     " Colour Scheme & Icons
     Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
@@ -94,7 +104,7 @@ set smarttab
 set backspace=indent,eol,start  " easy delete
 
 " Scrolling
-set scrolloff=5
+set scrolloff=8
 set sidescrolloff=5
 
 " History
@@ -104,22 +114,34 @@ set history=500
 set undofile
 set undolevels=1000
 set undoreload=10000
+nnoremap <leader>u :UndotreeToggle<CR>
 
 " Folding
 "set nofoldenable
-
+"
 " Search
 set incsearch
 set hlsearch
 set showmatch
 set ignorecase
 set smartcase
-nmap <Leader><space> :nohlsearch<cr>
+nnoremap <Leader><space> :nohlsearch<cr>
+" Keep cursor centered when searching
+nnoremap n nzzzv
+nnoremap N Nzzzv
+" Search & Replace current word
+nnoremap <Leader>s :%s/\<<C-r><C-w>\>/
 
 " Mouse
 " set mousemodel=popup
 "set mouse=n
 set mouse=
+
+" Cursor - block cursor in insert mode
+set guicursor=
+
+" 80 Column
+set colorcolumn=80
 
 " Misc
 let mapleader='\'
@@ -140,38 +162,40 @@ colorscheme tokyonight
 
 " Theme overrides
 hi Normal guifg=#fa9500
-hi SignColumn guibg=#3b4261
-" @TODO fix bufferline colours
-hi BufferLineFill guifg=White guibg=#16161e
-hi BufferLineBackground guifg=DarkGrey guibg=#16161e
-hi BufferLineBufferSelected guifg=LightGrey guibg=DarkGreen
+hi SignColumn guibg=#15161E
 
 " Spelling
 set nospell
-
-" Search & Replace current word
-nnoremap <Leader>s :%s/\<<C-r><C-w>\>/
 
 " Title bar
 set title
 
 " Copy & Paste
 " whole file to system buffer
-nmap <Leader>y :%y+<cr>
+nnoremap <Leader>y :%y+<cr>
 " visual selected to system buffer
-vmap <silent> <Leader>c "+y<cr>
+vnoremap <silent> <Leader>c "+y<cr>
+" Don't line break pastes
 set textwidth=0
+" Blackhole delete - doesn't add to register
+nnoremap <leader>d "_d
+vnoremap <leader>d "_d
+
+" Visual move
+vnoremap J :m '>+1<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv
 
 " Spacing
 set listchars=
 set nolist
-
 let c_space_errors = 1
 
 " Gutter
 " Always show the signcolumn, otherwise it would shift the text each time
 set signcolumn=yes
-set updatetime=100
+
+" used with some plugin apparently
+set updatetime=50
 
 " Indenting
 set autoindent
@@ -182,38 +206,53 @@ set smartindent
 set hidden
 " Don't jump to first character with page commands.
 set nostartofline
-" move to start end of line using crtl a/e when in :%s/ for example
+" Move to start/end of line using crtl a/e when in :%s/ for example
 cnoremap <c-a> <home>
 cnoremap <c-e> <end>
-" navigate buffers
-map <silent><nowait> <C-Left> :bprevious<CR>
-map <silent><nowait> <C-Right> :bnext<CR>
-" navigate windows
-nmap <silent><nowait> <A-Up> :wincmd k<CR>
-nmap <silent><nowait> <A-Down> :wincmd j<CR>
-nmap <silent><nowait> <A-Left> :wincmd h<CR>
-nmap <silent><nowait> <A-Right> :wincmd l<CR>
-" navigate in terminal
+" Navigate buffers
+noremap <silent><nowait> <C-Left> :bprevious<CR>
+noremap <silent><nowait> <C-Right> :bnext<CR>
+" Navigate windows - seems broke?
+nnoremap <silent><nowait> <A-Up> :wincmd k<CR>
+nnoremap <silent><nowait> <A-Down> :wincmd j<CR>
+nnoremap <silent><nowait> <A-Left> :wincmd h<CR>
+nnoremap <silent><nowait> <A-Right> :wincmd l<CR>
+" Navigate in terminal
 tnoremap <silent><nowait> <C-Left> <C-\><C-N>:bprevious<CR>
 tnoremap <silent><nowait> <C-Right> <C-\><C-N>:bnext<CR>
 " Exit terminal mode
 tnoremap <Esc> <C-\><C-n>
-" navigate hunks
-nmap <silent><nowait> <C-]> <Plug>(GitGutterNextHunk)
-nmap <silent><nowait> <C-[> <Plug>(GitGutterPrevHunk)
+" Navigate hunks
+nnoremap <silent><nowait> <C-]> <Plug>(GitGutterNextHunk)
+nnoremap <silent><nowait> <C-[> <Plug>(GitGutterPrevHunk)
 
 " close buffer / window
-nmap <silent> <C-x> :bd<CR>
+nnoremap <silent> <C-x> :bd<CR>
+
+" Resize split
+nnoremap <leader>, :vertical resize +5<CR>
+nnoremap <leader>. :vertical resize -5<CR>
 
 " Netrw
-nmap <silent><nowait> <leader>n :Vexplore<CR>
+nnoremap <silent><nowait> <leader>n :Vexplore<CR>
+" open file in new buffer
+let g:netrw_browse_split=3
+let g:netrw_banner=0
+let g:netrw_winsize=25
 
-" Git diff
-nmap <silent><nowait><leader>g :Gdiffsplit!<CR>
+" Git
+" Diff
+nnoremap <silent><nowait><leader>gd :Gdiffsplit!<CR>
+" History
+nnoremap <silent><nowait><leader>gh :GV<CR>
+" History current file
+nnoremap <silent><nowait><leader>gc :GV!<CR>
 
 " Numbering
-nmap <silent> <C-n> :set invrelativenumber<CR>
-nmap <silent> <C-l> :set invnumber<CR>
+set relativenumber
+set number
+nnoremap <silent> <C-n> :set invrelativenumber<CR>
+nnoremap <silent> <C-l> :set invnumber<CR>
 
 " Terminal
 let g:floaterm_keymap_toggle = '<F12>'
@@ -243,10 +282,10 @@ autocmd BufRead,BufNewFile *.py set tabstop=2
 autocmd BufRead,BufNewFile *.py set shiftwidth=2
 autocmd BufRead,BufNewFile *.py set noexpandtab
 
-" vue
+" Vue
 autocmd BufEnter *.vue :syntax sync fromstart
 
-" blade
+" Blade
 augroup blade_ft
   autocmd!
   autocmd BufNewFile,BufRead *.blade.php set syntax=php
@@ -265,21 +304,21 @@ augroup filetypedetect
     au! BufRead,BufNewFile * call DetectGoHtmlTmpl()
 augroup END
 
-" yaml
+" YAML
 autocmd FileType yaml setlocal shiftwidth=2 softtabstop=2 expandtab
 
-" html
+" HTML
 autocmd FileType html setlocal shiftwidth=2 softtabstop=2 expandtab
 
-" css
+" CSS
 autocmd FileType css setlocal shiftwidth=2 softtabstop=2 expandtab
 
-" php
+" PHP
 autocmd FileType php setlocal shiftwidth=4 softtabstop=4 expandtab
 let g:php_cs_fixer_rules = "@PSR12"
 nnoremap <silent><leader>b :call PhpCsFixerFixFile()<CR>
 
-" go
+" Go
 augroup go
   autocmd!
   autocmd BufNewFile,BufRead *.go let g:go_highlight_extra_types = 1
@@ -294,7 +333,7 @@ augroup go
   autocmd BufNewFile,BufRead *.go let g:go_highlight_generate_tags = 1
   autocmd BufNewFile,BufRead *.go let g:go_highlight_variable_declarations = 1
   autocmd BufNewFile,BufRead *.go let g:go_highlight_variable_assignments = 1
-  autocmd BufNewFile,BufRead *.go nmap <Leader><space> :nohlsearch<cr>:GoCoverageClear<cr>
+  autocmd BufNewFile,BufRead *.go nnoremap <Leader><space> :nohlsearch<cr>:GoCoverageClear<cr>
   autocmd BufNewFile,BufRead *.go let g:go_fmt_command = "goimports"
 augroup END
 
@@ -320,10 +359,10 @@ if exists('g:plugs["coc.nvim"]')
           \ <SID>check_back_space() ? "\<TAB>" :
           \ coc#refresh()
 
-    nmap <silent><c-down> <Plug>(coc-diagnostic-next)
-    nmap <silent><c-up> <Plug>(coc-diagnostic-prev)
-    nmap <silent><nowait> <leader>e :<C-u>CocList diagnostics<cr>
-    nmap <silent><leader>f <Plug>(coc-codeaction)
+    nnoremap <silent><c-down> <Plug>(coc-diagnostic-next)
+    nnoremap <silent><c-up> <Plug>(coc-diagnostic-prev)
+    nnoremap <silent><nowait> <leader>e :<C-u>CocList diagnostics<cr>
+    nnoremap <silent><leader>f <Plug>(coc-codeaction)
 
     nnoremap  :call <SID>show_documentation()<CR>
     function! s:show_documentation()
@@ -341,12 +380,11 @@ if exists('g:plugs["coc.nvim"]')
 
     let g:coc_snippet_next = '<tab>'
     let g:coc_node_path = '/usr/local/bin/node'
-    nmap <silent> gd <Plug>(coc-definition)
-    nmap <silent> gy <Plug>(coc-type-definition)
-    nmap <silent> gi <Plug>(coc-implementation)
-    nmap <silent> gr <Plug>(coc-references)
+    nnoremap <silent> gd <Plug>(coc-definition)
+    nnoremap <silent> gy <Plug>(coc-type-definition)
+    nnoremap <silent> gi <Plug>(coc-implementation)
+    nnoremap <silent> gr <Plug>(coc-references)
 endif
-
 
 " Close quickfix list on enter
 autocmd FileType qf nnoremap <buffer> <CR> <CR>:cclose<CR>:lclose<CR>
@@ -377,35 +415,35 @@ endif
 let test#strategy = "neovim"
 let test#neovim#term_position = "vert botright"
 let test#php#phpunit#executable = "vendor/bin/paratest"
-nmap <leader>t :w<CR> :let test#php#phpunit#executable = 'vendor/bin/paratest'<CR> :TestFile<CR>
-nmap <leader>T :w<CR> :let test#php#phpunit#executable = 'vendor/bin/paratest'<CR> :TestSuite<CR>
-nmap <leader>c :w<CR> :let test#php#phpunit#executable = 'vendor/bin/phpunit'<CR> :TestNearest<CR>
+nnoremap <leader>t :w<CR> :let test#php#phpunit#executable = 'vendor/bin/paratest'<CR> :TestFile<CR>
+nnoremap <leader>T :w<CR> :let test#php#phpunit#executable = 'vendor/bin/paratest'<CR> :TestSuite<CR>
+nnoremap <leader>c :w<CR> :let test#php#phpunit#executable = 'vendor/bin/phpunit'<CR> :TestNearest<CR>
 if has('nvim')
-  tmap <C-o> <C-\><C-n>
+  tnoremap <C-o> <C-\><C-n>
 endif
 
 " Projectionist
-nmap <leader>a :A<CR>
+nnoremap <leader>a :A<CR>
 
 " Dispatch shortcuts
-nmap <leader>m :w<CR> :Make<CR>
+nnoremap <leader>m :w<CR> :Make<CR>
 
 " Indent guides config - off by default
 let g:indentLine_enabled = 0
 autocmd BufRead,BufNewFile *.yml,*.yaml,*.py let g:indentLine_enabled = 1
 let g:indentLine_char_list = ['⎸']
-nmap <leader>i :IndentLinesToggle<CR>
+nnoremap <leader>i :IndentLinesToggle<CR>
 
 " terraform config
 let g:terraform_align=1
 let g:terraform_fmt_on_save=1
 
 " vim-easy-align config
-xmap ga <Plug>(EasyAlign)
-nmap ga <Plug>(EasyAlign)
-nmap <silent><leader>= vipga=
+xnoremap ga <Plug>(EasyAlign)
+nnoremap ga <Plug>(EasyAlign)
+nnoremap <silent><leader>= vipga=
 
-vmap <silent> <C-s> :sort<CR>
+vnoremap <silent> <C-s> :sort<CR>
 
 " Prettier
 " autocmd TextChanged,InsertLeave *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.svelte,*.yaml,*.html PrettierAsync
@@ -414,23 +452,30 @@ command! -nargs=0 Prettier :call CocAction('runCommand', 'prettier.formatFile')
 let g:prettier#autoformat = 0
 let g:prettier#quickfix_enabled = 0
 let g:prettier#exec_cmd_async = 1
-vmap <leader>p :CocCommand prettier.formatFile<CR>
-nmap <leader>p :CocCommand prettier.formatFile<CR>
+vnoremap <leader>p :CocCommand prettier.formatFile<CR>
+nnoremap <leader>p :CocCommand prettier.formatFile<CR>
 autocmd InsertLeave *.js,*.jsx Prettier
 
 " Reload vim config
-nmap <silent> <leader>v :so $MYVIMRC<CR>
+nnoremap <silent> <leader>v :so $MYVIMRC<CR>
 
 
-set completeopt=menu,menuone,noinsert
+set completeopt=menu,menuone,noselect
+let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 set shortmess+=c
 
 nnoremap <silent> <cmd>lua vim.lsp.buf.hover()<CR>
-nmap <silent>gd <cmd>lua vim.lsp.buf.definition()<CR>
-nmap <silent><c-up> <cmd>lua vim.diagnostic.goto_prev()<CR>
-nmap <silent><c-down> <cmd>lua vim.diagnostic.goto_next()<CR>
-nmap <silent><leader>f <cmd>lua vim.lsp.buf.code_action()<CR>
+nnoremap <silent>gd <cmd>lua vim.lsp.buf.definition()<CR>
+nnoremap <silent><c-up> <cmd>lua vim.diagnostic.goto_prev()<CR>
+nnoremap <silent><c-down> <cmd>lua vim.diagnostic.goto_next()<CR>
+nnoremap <silent><leader>f <cmd>lua vim.lsp.buf.code_action()<CR>
 autocmd User CompeConfirmDone :lua vim.lsp.buf.signature_help()
+
+nnoremap <leader>ps :lua require('telescope.builtin').grep_string({ search = vim.fn.input("Grep For > ")})<CR>
+
+if executable('rg')
+    let g:rg_derive_root='true'
+endif
 
 " Lua settings
 lua require('settings')

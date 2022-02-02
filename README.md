@@ -1,1 +1,4 @@
-Nvim and coc-settings.json
+# Neovim with LSP
+
+## legacy coc-settings.json
+Retained for reference
