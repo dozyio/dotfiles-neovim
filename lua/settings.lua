@@ -1,4 +1,5 @@
 require 'lsp_signature'.setup()
+require 'Comment'.setup()
 require('bufferline.settings')
 require('galaxyline.settings')
 require('lsp.settings')

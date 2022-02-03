@@ -72,6 +72,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'dozyio/vim-better-whitespace'
     " floating terminal with F12
     Plug 'voldikss/vim-floaterm'
+    Plug 'numToStr/Comment.nvim'
 
     " Testing
     Plug 'janko-m/vim-test'
