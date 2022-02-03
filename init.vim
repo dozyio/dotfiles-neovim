@@ -115,6 +115,9 @@ set undofile
 set undolevels=1000
 set undoreload=10000
 nnoremap <leader>u :UndotreeToggle<CR>
+let g:undotree_HelpLine = 0
+let g:undotree_WindowLayout = 2
+let g:undotree_SetFocusWhenToggle = 1
 
 " Folding
 "set nofoldenable
