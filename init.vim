@@ -31,6 +31,7 @@ call plug#begin('~/.vim/plugged')
     " Plug 'neoclide/coc.nvim', {'branch': 'release'}
     Plug 'neovim/nvim-lspconfig'
     Plug 'williamboman/nvim-lsp-installer'
+    Plug 'hrsh7th/cmp-nvim-lua'
     Plug 'hrsh7th/cmp-nvim-lsp'
     Plug 'hrsh7th/cmp-buffer'
     Plug 'hrsh7th/cmp-path'
@@ -118,6 +119,17 @@ nnoremap <leader>u :UndotreeToggle<CR>
 let g:undotree_HelpLine = 0
 let g:undotree_WindowLayout = 2
 let g:undotree_SetFocusWhenToggle = 1
+" Undo breakpoints
+inoremap , ,<c-g>u
+inoremap . .<c-g>u
+inoremap ! !<c-g>u
+inoremap ? ?<c-g>u
+inoremap { {<c-g>u
+inoremap } }<c-g>u
+inoremap ( (<c-g>u
+inoremap ) )<c-g>u
+inoremap [ [<c-g>u
+inoremap ] ]<c-g>u
 
 " Folding
 "set nofoldenable
@@ -129,7 +141,7 @@ set showmatch
 set ignorecase
 set smartcase
 nnoremap <Leader><space> :nohlsearch<cr>
-" Keep cursor centered when searching
+" Keep cursor centered when searching and opens folds
 nnoremap n nzzzv
 nnoremap N Nzzzv
 " Search & Replace current word
@@ -229,7 +241,11 @@ tnoremap <Esc> <C-\><C-n>
 nnoremap <silent><nowait> <C-]> <Plug>(GitGutterNextHunk)
 nnoremap <silent><nowait> <C-[> <Plug>(GitGutterPrevHunk)
 
-" close buffer / window
+" Quickfix next
+nnoremap <C-k> :cnext<CR>zz
+nnoremap <C-j> :cprev<CR>zz
+
+" Close buffer / window
 nnoremap <silent> <C-x> :bd<CR>
 
 " Resize split
@@ -469,6 +485,7 @@ set shortmess+=c
 
 nnoremap <silent> <cmd>lua vim.lsp.buf.hover()<CR>
 nnoremap <silent>gd <cmd>lua vim.lsp.buf.definition()<CR>
+nnoremap <silent>gD <cmd>lua vim.lsp.buf.declaration()<CR><CR>
 nnoremap <silent><c-up> <cmd>lua vim.diagnostic.goto_prev()<CR>
 nnoremap <silent><c-down> <cmd>lua vim.diagnostic.goto_next()<CR>
 nnoremap <silent><leader>f <cmd>lua vim.lsp.buf.code_action()<CR>

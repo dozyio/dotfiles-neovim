@@ -72,12 +72,29 @@ cmp.setup({
         end, { "i", "s" }),
     },
 
-    sources = cmp.config.sources({
-        { name = 'nvim_lsp' },
-        { name = 'vsnip' },
-    }, {
-        { name = 'buffer' },
-    })
+    sources = cmp.config.sources(
+        {
+            { name = 'nvim_lsp' },
+            { name = 'vsnip' },
+            { name = 'nvim_lua' },
+        },
+        {
+            {
+                name = 'buffer',
+                option = {
+                    -- all buffers
+                    get_bufnrs = function()
+                        return vim.api.nvim_list_bufs()
+                    end
+                }
+            },
+        }
+    ),
+
+    experimental = {
+        -- show inline uncompleted text
+        ghost_text = true
+    }
 })
 
 -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
@@ -205,7 +222,7 @@ for type, icon in pairs(signs) do
     vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
 end
 
-vim.o.updatetime = 250
+vim.o.updatetime = 100
 vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]]
 
 vim.diagnostic.config({
@@ -216,4 +233,8 @@ vim.diagnostic.config({
   severity_sort = false,
 })
 
-require("trouble").setup {}
+require("trouble").setup {
+     action_keys = {
+         close = "<leader>x"
+     }
+}
