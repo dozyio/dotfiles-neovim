@@ -13,6 +13,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'noahfrederick/vim-laravel', { 'for': 'php' }
     " Go
     Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+    Plug 'ray-x/go.nvim',
     " Nginx
     Plug 'chr4/nginx.vim', { 'for': 'nginx' }
     " Terraform
@@ -31,6 +32,7 @@ call plug#begin('~/.vim/plugged')
     " Plug 'neoclide/coc.nvim', {'branch': 'release'}
     Plug 'neovim/nvim-lspconfig'
     Plug 'williamboman/nvim-lsp-installer'
+    Plug 'jose-elias-alvarez/null-ls.nvim'
     Plug 'hrsh7th/cmp-nvim-lua'
     Plug 'hrsh7th/cmp-nvim-lsp'
     Plug 'hrsh7th/cmp-buffer'
@@ -44,6 +46,8 @@ call plug#begin('~/.vim/plugged')
     Plug 'nvim-lua/lsp-status.nvim'
     Plug 'folke/trouble.nvim'
     Plug 'ray-x/lsp_signature.nvim'
+    Plug 'weilbith/nvim-code-action-menu'
+    Plug 'kosayoda/nvim-lightbulb'
 
     " Telescope
     Plug 'nvim-lua/popup.nvim'
@@ -58,7 +62,9 @@ call plug#begin('~/.vim/plugged')
 
     " Utils
     Plug 'Yggdroot/indentLine'
-    Plug 'ctrlpvim/ctrlp.vim'
+    " Plug 'ctrlpvim/ctrlp.vim'
+    Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+    Plug 'junegunn/fzf.vim'
     " still need vim-snippets?
     Plug 'honza/vim-snippets'
     Plug 'junegunn/vim-easy-align'
@@ -78,10 +84,12 @@ call plug#begin('~/.vim/plugged')
     Plug 'janko-m/vim-test'
 
     " Footers
-    Plug 'glepnir/galaxyline.nvim' , {'branch': 'main'}
+    " Plug 'glepnir/galaxyline.nvim' , {'branch': 'main'}
+    " galaxyline fork
+    Plug 'NTBBloodbath/galaxyline.nvim'
 
     " Buffers
-    Plug 'akinsho/nvim-bufferline.lua'
+    Plug 'akinsho/bufferline.nvim'
 
     " Undo
     Plug 'mbbill/undotree'
@@ -157,7 +165,7 @@ set mouse=
 set guicursor=
 
 " 80 Column
-set colorcolumn=80
+set colorcolumn=80,120
 
 " Misc
 let mapleader='\'
@@ -174,6 +182,7 @@ set termguicolors
 let g:tokyonight_style = "night"
 let g:tokyonight_italic_functions = 1
 let g:tokyonight_transparent = 1
+
 colorscheme tokyonight
 
 " Theme overrides
@@ -211,7 +220,7 @@ let c_space_errors = 1
 set signcolumn=yes
 
 " used with some plugin apparently
-set updatetime=50
+set updatetime=250
 
 " Indenting
 set autoindent
@@ -312,17 +321,17 @@ augroup blade_ft
   autocmd BufNewFile,BufRead *.blade.php set filetype=html
 augroup END
 
-" Go / Hugo Templates
-function DetectGoHtmlTmpl()
-    if expand('%:e') == "html" && search("{{") != 0
-        set filetype=gohtml
-        set syntax=gohtmltmpl
-    endif
-endfunction
-
-augroup filetypedetect
-    au! BufRead,BufNewFile * call DetectGoHtmlTmpl()
-augroup END
+" " Go / Hugo Templates
+" function DetectGoHtmlTmpl()
+"     if expand('%:e') == "html" && search("{{") != 0
+"         set filetype=gohtmltmpl
+"
+"     endif
+" endfunction
+"
+" augroup filetypedetect
+"     au! BufRead,BufNewFile * call DetectGoHtmlTmpl()
+" augroup END
 
 " YAML
 autocmd FileType yaml setlocal shiftwidth=2 softtabstop=2 expandtab
@@ -468,19 +477,18 @@ vnoremap <silent> <C-s> :sort<CR>
 " Prettier
 " autocmd TextChanged,InsertLeave *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.svelte,*.yaml,*.html PrettierAsync
 " Prettier
-command! -nargs=0 Prettier :call CocAction('runCommand', 'prettier.formatFile')
-let g:prettier#autoformat = 0
-let g:prettier#quickfix_enabled = 0
-let g:prettier#exec_cmd_async = 1
-vnoremap <leader>p :CocCommand prettier.formatFile<CR>
-nnoremap <leader>p :CocCommand prettier.formatFile<CR>
-autocmd InsertLeave *.js,*.jsx Prettier
+" command! -nargs=0 Prettier :call CocAction('runCommand', 'prettier.formatFile')
+" let g:prettier#autoformat = 0
+" let g:prettier#quickfix_enabled = 0
+" let g:prettier#exec_cmd_async = 1
+" vnoremap <leader>p :CocCommand prettier.formatFile<CR>
+" nnoremap <leader>p :CocCommand prettier.formatFile<CR>
+" autocmd InsertLeave *.js,*.jsx Prettier
 
 " Reload vim config
 nnoremap <silent> <leader>v :so $MYVIMRC<CR>
 
-
-set completeopt=menu,menuone,noselect
+set completeopt=menu,menuone,noinsert,noselect,preview
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 set shortmess+=c
 
@@ -490,9 +498,14 @@ nnoremap <silent>gD <cmd>lua vim.lsp.buf.declaration()<CR><CR>
 nnoremap <silent><c-up> <cmd>lua vim.diagnostic.goto_prev()<CR>
 nnoremap <silent><c-down> <cmd>lua vim.diagnostic.goto_next()<CR>
 nnoremap <silent><leader>f <cmd>lua vim.lsp.buf.code_action()<CR>
+" nnoremap <silent><leader>f :CodeActionMenu<CR>
 autocmd User CompeConfirmDone :lua vim.lsp.buf.signature_help()
 
-nnoremap <leader>ps :lua require('telescope.builtin').grep_string({ search = vim.fn.input("Grep For > ")})<CR>
+" nnoremap <leader>ps :lua require('telescope.builtin').grep_string({ search = vim.fn.input("Grep For > ")})<CR>
+" c-q to copy list to quickfix list
+nnoremap <silent><c-p> <cmd>Telescope find_files<cr>
+nnoremap <silent><c-g> <cmd>Telescope live_grep<cr>
+nnoremap <silent><c-q> :copen<cr>
 
 if executable('rg')
     let g:rg_derive_root='true'

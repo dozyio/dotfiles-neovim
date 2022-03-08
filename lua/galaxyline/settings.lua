@@ -1,6 +1,6 @@
 -- Galaxyline
 local gl = require('galaxyline')
-local colors = require('galaxyline.theme').default
+local colors = require('galaxyline.themes.colors').default
 local condition = require('galaxyline.condition')
 local lspClients = require('galaxyline.provider_lsp_all')
 
@@ -52,15 +52,16 @@ gls.left[3] = {
         highlight = {colors.fg,colors.bg}
     }
 }
-gls.left[4] ={
+
+--[[ gls.left[4] ={
     FileIcon = {
         provider = 'FileIcon',
         condition = condition.buffer_not_empty,
         highlight = {require('galaxyline.provider_fileinfo').get_file_icon_color,colors.bg},
     },
-}
+} ]]
 
-gls.left[5] = {
+gls.left[4] = {
     FileName = {
         provider = 'FileName',
         condition = condition.buffer_not_empty,
@@ -68,7 +69,7 @@ gls.left[5] = {
     }
 }
 
-gls.left[6] = {
+gls.left[5] = {
     LineInfo = {
         provider = 'LineColumn',
         separator = ' ',
@@ -77,7 +78,7 @@ gls.left[6] = {
     },
 }
 
-gls.left[7] = {
+gls.left[6] = {
     PerCent = {
         provider = 'LinePercent',
         separator = ' ',
@@ -86,14 +87,14 @@ gls.left[7] = {
     }
 }
 
-gls.left[8] = {
+gls.left[7] = {
     DiagnosticError = {
         provider = 'DiagnosticError',
         icon = '  ',
         highlight = {colors.red,colors.bg}
     }
 }
-gls.left[9] = {
+gls.left[8] = {
     DiagnosticWarn = {
         provider = 'DiagnosticWarn',
         icon = '  ',
@@ -101,7 +102,7 @@ gls.left[9] = {
     }
 }
 
-gls.left[10] = {
+gls.left[9] = {
     DiagnosticHint = {
         provider = 'DiagnosticHint',
         icon = '  ',
@@ -109,7 +110,7 @@ gls.left[10] = {
     }
 }
 
-gls.left[11] = {
+gls.left[10] = {
     DiagnosticInfo = {
         provider = 'DiagnosticInfo',
         icon = '  ',

@@ -16,10 +16,10 @@ local on_attach = function(_, bufnr)
 
     local opts = { noremap=true, silent=true }
     -- Mappings
-    buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
-    buf_set_keymap('n', '<c-up>', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
-    buf_set_keymap('n', '<c-down>', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
-    buf_set_keymap('n', '<leader>f', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+    -- buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+    -- buf_set_keymap('n', '<c-up>', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
+    -- buf_set_keymap('n', '<c-down>', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
+    -- buf_set_keymap('n', '<leader>f', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
     buf_set_keymap('n', '<leader>x', '<cmd>TroubleToggle<CR>', opts)
     -- ctrl + / to show function docs
     buf_set_keymap('n', '', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
@@ -77,8 +77,6 @@ cmp.setup({
             { name = 'nvim_lsp' },
             { name = 'vsnip' },
             { name = 'nvim_lua' },
-        },
-        {
             {
                 name = 'buffer',
                 option = {
@@ -185,7 +183,7 @@ local enhance_server_opts = {
     ["tailwindcss"] = function(opts)
         opts.settings = {
             tailwindCSS = {
-                validate = "warning",
+                --[[ validate = "warning",
                 lint = {
                     cssConflict = "error",
                     invalidApply = "error",
@@ -194,8 +192,11 @@ local enhance_server_opts = {
                     invalidConfigPath = "error",
                     invalidTailwindDirective = "error",
                     recommendedVariantOrder = "warning"
-                },
-                classAttributes = { "class", "className", "classList", "ngClass" }
+                }, ]]
+                classAttributes = { "class", "className", "classList", "ngClass" },
+                includeLanguages = {
+                    gohtmltmpl = "html"
+                }
             }
         }
     end,
@@ -210,6 +211,14 @@ lsp_installer.on_server_ready(function(server)
         enhance_server_opts[server.name](opts)
     end
 
+    if server.name == "tailwindcss" then
+        local tailwindcssls_default_config = require("lspconfig.server_configurations.tailwindcss").default_config
+        local tailwindcssls_default_filetypes = tailwindcssls_default_config.filetypes
+        local tailwindcss_default_userLanguages = tailwindcssls_default_config.init_options.userLanguages
+        table.insert(tailwindcssls_default_filetypes, "gohtmltmpl")
+        tailwindcss_default_userLanguages.gohtmltmpl = "gohtml"
+    end
+
     -- Refer to https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
     server:setup(opts)
 end)
@@ -222,7 +231,6 @@ for type, icon in pairs(signs) do
     vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
 end
 
-vim.o.updatetime = 100
 vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]]
 
 vim.diagnostic.config({
