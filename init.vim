@@ -7,12 +7,12 @@ autocmd BufEnter * :syntax sync fromstart
 call plug#begin('~/.vim/plugged')
     " Language specfic
     " PHP
-    Plug 'lvht/phpcd.vim', { 'for': 'php', 'do': 'composer install' }
+    "Plug 'lvht/phpcd.vim', { 'for': 'php', 'do': 'composer install' }
     Plug 'stephpy/vim-php-cs-fixer', { 'for': 'php' }
-    Plug 'noahfrederick/vim-composer', { 'for': 'php' }
-    Plug 'noahfrederick/vim-laravel', { 'for': 'php' }
+    "Plug 'noahfrederick/vim-composer', { 'for': 'php' }
+    "Plug 'noahfrederick/vim-laravel', { 'for': 'php' }
     " Go
-    Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+    " Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
     Plug 'ray-x/go.nvim',
     " Nginx
     Plug 'chr4/nginx.vim', { 'for': 'nginx' }
@@ -22,7 +22,8 @@ call plug#begin('~/.vim/plugged')
     Plug 'iamcco/markdown-preview.nvim', { 'for': 'markdown', 'do': 'cd app && yarn install'  }
 
     " Git
-    Plug 'airblade/vim-gitgutter'
+    " Plug 'airblade/vim-gitgutter'
+    Plug 'lewis6991/gitsigns.nvim'
     Plug 'rhysd/committia.vim'
     Plug 'tpope/vim-fugitive'
     " View history
@@ -59,6 +60,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
     " Different color brackets
     Plug 'p00f/nvim-ts-rainbow'
+    Plug 'nvim-treesitter/nvim-treesitter-context'
 
     " Utils
     Plug 'Yggdroot/indentLine'
@@ -79,9 +81,19 @@ call plug#begin('~/.vim/plugged')
     " floating terminal with F12
     Plug 'voldikss/vim-floaterm'
     Plug 'numToStr/Comment.nvim'
-
+    " Nerdtree
+    Plug 'preservim/nerdtree'
+    "NvimTree
+    Plug 'kyazdani42/nvim-web-devicons'
+    Plug 'kyazdani42/nvim-tree.lua'
     " Testing
     Plug 'janko-m/vim-test'
+
+    " Debugging
+    Plug 'ray-x/guihua.lua', { 'do': 'cd lua/fzy && make' }
+    Plug 'mfussenegger/nvim-dap'
+    Plug 'rcarriga/nvim-dap-ui', { 'for': 'go' }
+    Plug 'theHamsta/nvim-dap-virtual-text', { 'for': 'go' }
 
     " Footers
     " Plug 'glepnir/galaxyline.nvim' , {'branch': 'main'}
@@ -92,7 +104,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'akinsho/bufferline.nvim'
 
     " Undo
-    Plug 'mbbill/undotree'
+    " Plug 'mbbill/undotree'
 
     " Colour Scheme & Icons
     Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
@@ -103,10 +115,13 @@ call plug#end()
 set exrc
 set secure
 
+" let g:do_filetype_lua = 1
+" let g:do_legacy_filetype = 1
+
 " " Tabs
-set tabstop=4
+set tabstop=2
 set softtabstop=0
-set shiftwidth=4
+set shiftwidth=2
 set expandtab
 set smarttab
 
@@ -179,15 +194,15 @@ set noerrorbells
 
 " Theme
 set termguicolors
-let g:tokyonight_style = "night"
-let g:tokyonight_italic_functions = 1
-let g:tokyonight_transparent = 1
-
-colorscheme tokyonight
-
-" Theme overrides
-hi Normal guifg=#fa9500
-hi SignColumn guibg=#15161E
+" let g:tokyonight_style = "night"
+" let g:tokyonight_italic_functions = 1
+" let g:tokyonight_transparent = 1
+"
+" colorscheme tokyonight
+"
+" " Theme overrides
+" hi Normal guifg=#fa9500
+" hi SignColumn guibg=#15161E
 
 " Spelling
 set nospell
@@ -246,10 +261,14 @@ nnoremap <silent><nowait> <A-Right> :wincmd l<CR>
 tnoremap <silent><nowait> <C-Left> <C-\><C-N>:bprevious<CR>
 tnoremap <silent><nowait> <C-Right> <C-\><C-N>:bnext<CR>
 " Exit terminal mode
-tnoremap <Esc> <C-\><C-n>
+" tnoremap <Esc> <C-\><C-n>
 " Navigate hunks
 nnoremap <silent><nowait> <C-]> <Plug>(GitGutterNextHunk)
 nnoremap <silent><nowait> <C-[> <Plug>(GitGutterPrevHunk)
+nnoremap <silent><nowait> <leader>n :NvimTreeToggle<CR>
+
+let NERDTreeShowHidden=1
+let g:NERDTreeWinSize=60
 
 " Quickfix next
 nnoremap <C-k> :cnext<CR>zz
@@ -263,7 +282,7 @@ nnoremap <leader>, :vertical resize +5<CR>
 nnoremap <leader>. :vertical resize -5<CR>
 
 " Netrw
-nnoremap <silent><nowait> <leader>n :Vexplore<CR>
+" nnoremap <silent><nowait> <leader>n :Vexplore<CR>
 " open file in new buffer
 let g:netrw_browse_split=3
 let g:netrw_banner=0
@@ -290,7 +309,7 @@ let g:floaterm_height = 0.8
 let g:floaterm_winblend = 0
 let g:floaterm_title = ''
 let g:floaterm_autoclose = 1
-let g:floaterm_shell = 'bash --login'
+let g:floaterm_shell = 'zsh --login'
 hi FloatermBorder guifg=orange
 
 " Text
@@ -298,28 +317,37 @@ set nojoinspaces " Better J joins
 autocmd BufWinEnter * set formatoptions+=j " better joins with comments
 
 " Filetypes
-autocmd BufRead,BufNewFile *.js,*.ts,*.vue set tabstop=2
-autocmd BufRead,BufNewFile *.js,*.ts,*.vue set shiftwidth=2
-autocmd BufRead,BufNewFile *.js,*.vue set noexpandtab
-autocmd BufRead,BufNewFile *.ts set expandtab
-
-autocmd BufRead,BufNewFile *.yml,*.yaml,*.hcl set tabstop=2
-autocmd BufRead,BufNewFile *.yml,*.yaml,*.hcl set shiftwidth=2
-autocmd BufRead,BufNewFile *.yml,*.yaml,*.hcl set expandtab
-
-autocmd BufRead,BufNewFile *.py set tabstop=2
-autocmd BufRead,BufNewFile *.py set shiftwidth=2
-autocmd BufRead,BufNewFile *.py set noexpandtab
-
-" Vue
-autocmd BufEnter *.vue :syntax sync fromstart
-
-" Blade
-augroup blade_ft
-  autocmd!
-  autocmd BufNewFile,BufRead *.blade.php set syntax=php
-  autocmd BufNewFile,BufRead *.blade.php set filetype=html
-augroup END
+" autocmd BufRead,BufNewFile *.js,*.ts,*.tsx,*.vue,*.json set tabstop=2
+" autocmd BufRead,BufNewFile *.js,*.ts,*.tsx,*.vue,*.json set shiftwidth=2
+" autocmd BufRead,BufNewFile *.js,*.ts,*.tsx,*.vue,*.json set expandtab
+"
+" autocmd BufRead,BufNewFile *.yml,*.yaml,*.hcl set tabstop=2
+" autocmd BufRead,BufNewFile *.yml,*.yaml,*.hcl set shiftwidth=2
+" autocmd BufRead,BufNewFile *.yml,*.yaml,*.hcl set expandtab
+"
+" autocmd BufRead,BufNewFile *.py set tabstop=2
+" autocmd BufRead,BufNewFile *.py set shiftwidth=2
+" autocmd BufRead,BufNewFile *.py set noexpandtab
+"
+" autocmd BufRead,BufNewFile *.md set tabstop=2
+" autocmd BufRead,BufNewFile *.md set shiftwidth=2
+" autocmd BufRead,BufNewFile *.md set noexpandtab
+"
+" " Vue
+" autocmd BufEnter *.vue :syntax sync fromstart
+"
+" " Twig
+" autocmd BufRead,BufNewFile *.twig set ft=json
+" autocmd BufRead,BufNewFile *.twig set tabstop=2
+" autocmd BufRead,BufNewFile *.twig set shiftwidth=2
+" autocmd BufRead,BufNewFile *.twig set expandtab
+"
+" " Blade
+" augroup blade_ft
+"   autocmd!
+"   autocmd BufNewFile,BufRead *.blade.php set syntax=php
+"   autocmd BufNewFile,BufRead *.blade.php set filetype=html
+" augroup END
 
 " " Go / Hugo Templates
 " function DetectGoHtmlTmpl()
@@ -332,21 +360,22 @@ augroup END
 " augroup filetypedetect
 "     au! BufRead,BufNewFile * call DetectGoHtmlTmpl()
 " augroup END
-
-" YAML
-autocmd FileType yaml setlocal shiftwidth=2 softtabstop=2 expandtab
-
-" HTML
-autocmd FileType html setlocal shiftwidth=2 softtabstop=2 expandtab
-
-" CSS
-autocmd FileType css setlocal shiftwidth=2 softtabstop=2 expandtab
-
-" PHP
-autocmd FileType php setlocal shiftwidth=4 softtabstop=4 expandtab
+"
+" " YAML
+" autocmd FileType yaml setlocal shiftwidth=2 softtabstop=2 expandtab
+"
+" " HTML
+" autocmd FileType html setlocal shiftwidth=2 softtabstop=2 expandtab
+"
+" " CSS
+" autocmd FileType css setlocal shiftwidth=2 softtabstop=2 expandtab
+"
+" " PHP
+" autocmd FileType php setlocal shiftwidth=4 softtabstop=4 expandtab
 let g:php_cs_fixer_rules = "@PSR12"
-nnoremap <silent><leader>b :call PhpCsFixerFixFile()<CR>
+" nnoremap <silent><leader>b :call PhpCsFixerFixFile()<CR>
 
+nnoremap <silent><leader>b :GoBreakToggle<CR>
 " Go
 augroup go
   autocmd!
@@ -416,10 +445,10 @@ if exists('g:plugs["coc.nvim"]')
 endif
 
 " Close quickfix list on enter
-autocmd FileType qf nnoremap <buffer> <CR> <CR>:cclose<CR>:lclose<CR>
+" autocmd FileType qf nnoremap <buffer> <CR> <CR>:cclose<CR>:lclose<CR>
 
 " Reduce height of quickfix to minimum of 3 lines, max 10 lines
-autocmd FileType qf call AdjustWindowHeight(3, 10)
+" autocmd FileType qf call AdjustWindowHeight(3, 10)
 function! AdjustWindowHeight(minheight, maxheight)
   exe max([min([line("$"), a:maxheight]), a:minheight]) . "wincmd _"
 endfunction
@@ -444,9 +473,15 @@ endif
 let test#strategy = "neovim"
 let test#neovim#term_position = "vert botright"
 let test#php#phpunit#executable = "vendor/bin/paratest"
-nnoremap <leader>t :w<CR> :let test#php#phpunit#executable = 'vendor/bin/paratest'<CR> :TestFile<CR>
-nnoremap <leader>T :w<CR> :let test#php#phpunit#executable = 'vendor/bin/paratest'<CR> :TestSuite<CR>
-nnoremap <leader>c :w<CR> :let test#php#phpunit#executable = 'vendor/bin/phpunit'<CR> :TestNearest<CR>
+let test#javascript#jest#executable = "node_modules/.bin/jest"
+let g:test#javascript#runner = 'jest'
+let test#javascript#jest#file_pattern = '\v(tests.ts|tests.tsx|*.tests.tsx?)$'
+" autocmd FileType php nnoremap <leader>t :w<CR> :let test#php#phpunit#executable = 'vendor/bin/paratest'<CR> :TestFile<CR>
+" autocmd FileType php nnoremap <leader>T :w<CR> :let test#php#phpunit#executable = 'vendor/bin/paratest'<CR> :TestSuite<CR>
+" autocmd FileType php nnoremap <leader>c :w<CR> :let test#php#phpunit#executable = 'vendor/bin/phpunit'<CR> :TestNearest<CR>
+nnoremap <leader>t :w<CR>:TestFile<CR>
+nnoremap <leader>T :w<CR>:TestSuite<CR>
+nnoremap <leader>c :w<CR>:TestNearest<CR>
 if has('nvim')
   tnoremap <C-o> <C-\><C-n>
 endif
@@ -495,6 +530,8 @@ set shortmess+=c
 nnoremap <silent> <cmd>lua vim.lsp.buf.hover()<CR>
 nnoremap <silent>gd <cmd>lua vim.lsp.buf.definition()<CR>
 nnoremap <silent>gD <cmd>lua vim.lsp.buf.declaration()<CR><CR>
+nnoremap <silent>gI <cmd>lua vim.lsp.buf.implementation()<CR><CR>
+nnoremap <silent>gr <cmd>lua vim.lsp.buf.references()<CR><CR>
 nnoremap <silent><c-up> <cmd>lua vim.diagnostic.goto_prev()<CR>
 nnoremap <silent><c-down> <cmd>lua vim.diagnostic.goto_next()<CR>
 nnoremap <silent><leader>f <cmd>lua vim.lsp.buf.code_action()<CR>
@@ -503,9 +540,12 @@ autocmd User CompeConfirmDone :lua vim.lsp.buf.signature_help()
 
 " nnoremap <leader>ps :lua require('telescope.builtin').grep_string({ search = vim.fn.input("Grep For > ")})<CR>
 " c-q to copy list to quickfix list
-nnoremap <silent><c-p> <cmd>Telescope find_files<cr>
+nnoremap <silent><c-p> <cmd>Telescope find_files hidden=true<cr>
 nnoremap <silent><c-g> <cmd>Telescope live_grep<cr>
+" nnoremap <expr> <c-a> ':Telescope live_grep<cr>' . expand('<cword>')
 nnoremap <silent><c-q> :copen<cr>
+
+nnoremap <silent><leader>p :EslintFixAll<cr>
 
 if executable('rg')
     let g:rg_derive_root='true'
