@@ -38,6 +38,9 @@ require("lazy").setup({
   "rhysd/committia.vim",
   "tpope/vim-fugitive",
 
+  -- Navigation
+  "nvim-neo-tree/neo-tree.nvim",
+
   -- Utils
   {
     "folke/which-key.nvim",
@@ -47,7 +50,9 @@ require("lazy").setup({
       vim.o.timeoutlen = 300
     end,
     opts = {}
-  }
+  },
+  "nvim-lua/plenary.nvim",
+  "MunifTanjim/nui.nvim",
 })
 
 -- Mouse
@@ -73,11 +78,64 @@ vim.keymap.set("n", "<C-n>", ":set invrelativenumber<CR>")
 vim.cmd([[autocmd BufEnter * set formatoptions+=j]]) -- better joins with comments
 vim.cmd([[autocmd BufEnter * set formatoptions-=cro]]) -- don't continue comments on next line
 
--- Git
-require("git")
+-- Copy & Paste
+ -- copy file to system buffer
+vim.keymap.set("n", "<leader>y", ":%y+<cr>", { noremap = true, nowait = true, silent = true })
+ -- copy selection to system buffer
+vim.keymap.set("v", "<leader>c", "\"+y+<cr>", { noremap = true, nowait = true, silent = true })
 
--- Theme
-require("theme")
+-- Delete
+-- delete current line, don't save to register
+vim.keymap.set("n", "<leader>d", "V\"_d", { noremap = true, nowait = true, silent = true })
+-- delete selection, don't save to register
+vim.keymap.set("v", "<leader>d", "\"_d", { noremap = true, nowait = true, silent = true })
 
--- Treesitter
-require("treesitter")
+-- Spelling
+vim.opt.spell = false
+
+-- Window
+vim.opt.title = true
+
+-- Files
+vim.opt.fileformats = "unix"
+
+-- Misc
+-- disable inline vim commands in files
+vim.opt.modelines = 0
+-- for status bars
+vim.opt.winminheight = 0
+-- save previous commands, history etc
+vim.opt.shada = "!,'100,<100,:100,s10,%,h" -- see :h 'shada'
+
+-- Undo
+vim.opt.undofile = true
+vim.opt.undolevels = 1000
+vim.opt.undoreload = 10000
+-- additional undo breakpoints
+vim.keymap.set("i", ",", ",<c-g>u", { noremap = true, nowait = true, silent = true })
+vim.keymap.set("i", ".", ".<c-g>u", { noremap = true, nowait = true, silent = true })
+vim.keymap.set("i", "!", "!<c-g>u", { noremap = true, nowait = true, silent = true })
+vim.keymap.set("i", "?", "?<c-g>u", { noremap = true, nowait = true, silent = true })
+vim.keymap.set("i", "{", "{<c-g>u", { noremap = true, nowait = true, silent = true })
+vim.keymap.set("i", "}", "}<c-g>u", { noremap = true, nowait = true, silent = true })
+vim.keymap.set("i", "(", "(<c-g>u", { noremap = true, nowait = true, silent = true })
+vim.keymap.set("i", ")", ")<c-g>u", { noremap = true, nowait = true, silent = true })
+vim.keymap.set("i", "[", "[<c-g>u", { noremap = true, nowait = true, silent = true })
+vim.keymap.set("i", "]", "]<c-g>u", { noremap = true, nowait = true, silent = true })
+
+-- Search
+vim.opt.incsearch = true
+vim.opt.hlsearch = true
+vim.opt.showmatch = true
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+-- keep cursor centered when searching
+vim.keymap.set("n", "n", "nzzzv", { noremap = true, nowait = true, silent = true })
+vim.keymap.set("n", "N", "Nzzzv", { noremap = true, nowait = true, silent = true })
+-- search and replace current word
+vim.keymap.set("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>/")
+
+require("lua/git/init")
+require("lua/theme/init")
+require("lua/treesitter/init")
+require("lua/navigation/init")
