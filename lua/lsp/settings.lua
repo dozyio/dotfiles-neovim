@@ -1,7 +1,7 @@
 -- nvim-lspconfig
 -- vim.lsp.set_log_level 'trace'
 -- vim.lsp.set_log_level 'debug'
-
+local lspkind = require('lspkind')
 ---@diagnostic disable-next-line: unused-local
 local nvim_lsp = require 'lspconfig'
 local on_attach = function(_, bufnr)
@@ -20,14 +20,20 @@ local on_attach = function(_, bufnr)
     -- buf_set_keymap('n', '<c-up>', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
     -- buf_set_keymap('n', '<c-down>', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
     -- buf_set_keymap('n', '<leader>f', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-    buf_set_keymap('n', '<leader>x', '<cmd>TroubleToggle<CR>', opts)
+    -- buf_set_keymap('n', '<leader>x', '<cmd>TroubleToggle<CR>', opts)
     -- ctrl + / to show function docs
     buf_set_keymap('n', '', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
 end
 
+-- local has_words_before = function()
+--     local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+--     return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+-- end
+
 local has_words_before = function()
-    local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-    return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+  if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then return false end
+  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+  return col ~= 0 and vim.api.nvim_buf_get_text(0, line-1, 0, line-1, col, {})[1]:match("^%s*$") == nil
 end
 
 local feedkey = function(key, mode)
@@ -40,6 +46,10 @@ cmp.setup({
         expand = function(args)
             vim.fn["vsnip#anonymous"](args.body)
         end,
+    },
+    window = {
+      completion = cmp.config.window.bordered(),
+      documentation = cmp.config.window.bordered(),
     },
     mapping = {
         ['<C-b>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
@@ -74,9 +84,10 @@ cmp.setup({
 
     sources = cmp.config.sources(
         {
-            { name = 'nvim_lsp' },
-            { name = 'vsnip' },
-            { name = 'nvim_lua' },
+            { name = "copilot", group_index = 2 },
+            { name = 'nvim_lsp', group_index = 2 },
+            { name = 'vsnip', group_index = 2 },
+            { name = 'nvim_lua', group_index = 3 },
             {
                 name = 'buffer',
                 option = {
@@ -84,15 +95,22 @@ cmp.setup({
                     get_bufnrs = function()
                         return vim.api.nvim_list_bufs()
                     end
-                }
+                },
+                group_index = 4
             },
         }
     ),
-
     experimental = {
         -- show inline uncompleted text
         ghost_text = true
-    }
+    },
+    formatting = {
+      format = lspkind.cmp_format({
+        mode = 'symbol',
+        maxwidth = 50,
+        symbol_map = { Copilot = "" }
+      })
+    },
 })
 
 -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
@@ -158,71 +176,7 @@ cmp.setup {
   },
 }
 
-local lsp_installer = require("nvim-lsp-installer")
-
--- LSP config per server
-local enhance_server_opts = {
-    ["vuels"] = function(opts)
-        opts.settings = {
-            vetur = {
-                ignoreProjectWarning = true
-            }
-        }
-    end,
-
-    ["intelephense"] = function(opts)
-        opts.settings = {
-            intelephense = {
-                telemetry = {
-                    enabled = false
-                }
-            }
-        }
-    end,
-
-    ["tailwindcss"] = function(opts)
-        opts.settings = {
-            tailwindCSS = {
-                --[[ validate = "warning",
-                lint = {
-                    cssConflict = "error",
-                    invalidApply = "error",
-                    invalidScreen = "error",
-                    invalidVariant = "error",
-                    invalidConfigPath = "error",
-                    invalidTailwindDirective = "error",
-                    recommendedVariantOrder = "warning"
-                }, ]]
-                classAttributes = { "class", "className", "classList", "ngClass" },
-                includeLanguages = {
-                    gohtmltmpl = "html"
-                }
-            }
-        }
-    end,
-}
-
-lsp_installer.on_server_ready(function(server)
-    local opts = {
-        on_attach = on_attach,
-    }
-
-    if enhance_server_opts[server.name] then
-        enhance_server_opts[server.name](opts)
-    end
-
-    if server.name == "tailwindcss" then
-        local tailwindcssls_default_config = require("lspconfig.server_configurations.tailwindcss").default_config
-        local tailwindcssls_default_filetypes = tailwindcssls_default_config.filetypes
-        local tailwindcss_default_userLanguages = tailwindcssls_default_config.init_options.userLanguages
-        table.insert(tailwindcssls_default_filetypes, "gohtmltmpl")
-        tailwindcss_default_userLanguages.gohtmltmpl = "gohtml"
-    end
-
-    -- Refer to https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
-    server:setup(opts)
-end)
-
+require("mason").setup {}
 
 -- Gutter icons
 local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
@@ -242,7 +196,7 @@ vim.diagnostic.config({
 })
 
 -- go
-local path = require 'nvim-lsp-installer.core.path'
+--[[ local path = require 'nvim-lsp-installer.core.path'
 local install_root_dir = path.concat {vim.fn.stdpath 'data', 'lsp_servers'}
 
 require('go').setup({
@@ -250,4 +204,72 @@ require('go').setup({
   fillstruct = 'gopls',
   dap_debug = true,
   dap_debug_gui = true
-})
+}) ]]
+
+-- require('gopls').setup()
+require("mason").setup()
+require("mason-lspconfig").setup()
+require("lspconfig").gopls.setup {}
+
+local configs = require 'lspconfig.configs'
+
+-- Go
+if not configs.golangcilsp then
+ 	configs.golangcilsp = {
+		default_config = {
+			cmd = {'golangci-lint-langserver'},
+			root_dir = nvim_lsp.util.root_pattern('.git', 'go.mod'),
+			init_options = {
+					command = { "golangci-lint", "run", "--enable-all", "--disable", "lll", "--out-format", "json", "--issues-exit-code=1" };
+			}
+		};
+	}
+end
+nvim_lsp.golangci_lint_ls.setup {
+	filetypes = {'go','gomod'},
+  on_attach = on_attach
+}
+
+-- TSServer
+--[[ require'lspconfig'.tsserver.setup{
+  filetypes = { "javascript", "typescript", "typescriptreact", "typescript.tsx" },
+  root_dir = function() return vim.loop.cwd() end
+} ]]
+
+-- Eslint
+require'lspconfig'.eslint.setup{}
+
+-- Synk
+--[[ if not configs.snyk then
+  configs.snyk = {
+    default_config = {
+      cmd = {'/usr/local/bin/snyk-ls'},
+      root_dir = nvim_lsp.util.root_pattern('.git'),
+      init_options = {
+        activateSnykCode = "true",
+        token = "44bb2b49-45d5-46a0-a955-b8cac5d3c585"
+      }
+    };
+  }
+end
+require'lspconfig'.snyk.setup {
+  filetypes = {'javascript', 'javascriptreact', 'typescript', 'typescriptreact', 'go', 'php'},
+  on_attach = on_attach
+} ]]
+
+require("mason").setup()
+require("mason-lspconfig").setup()
+
+require("mason-lspconfig").setup_handlers {
+  -- The first entry (without a key) will be the default handler
+  -- and will be called for each installed server that doesn't have
+  -- a dedicated handler.
+  function (server_name) -- default handler (optional)
+    require("lspconfig")[server_name].setup {}
+  end,
+  -- Next, you can provide a dedicated handler for specific servers.
+  -- For example, a handler override for the `rust_analyzer`:
+  ["rust_analyzer"] = function ()
+    require("rust-tools").setup {}
+  end
+}

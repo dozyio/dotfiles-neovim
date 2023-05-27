@@ -9,6 +9,7 @@ wk.register({
     ["<leader>y"] = { name="Copy whole file to OS copy buffer" },
     ["<leader>h"] = { name="Git hunk" },
     ["<leader>gd"] = { name="Git diff" },
+    ["<leader>r"] = { name="Refactor" },
     ["<C-]>"] = { name="Next hunk" },
     ["<C-[>"] = { name="Previous hunk" },
     ["<C-Right>"] = { name="Next buffer" },

@@ -31,9 +31,13 @@ call plug#begin('~/.vim/plugged')
 
     " LSP & Code completion
     " Plug 'neoclide/coc.nvim', {'branch': 'release'}
+    " Plug 'williamboman/nvim-lsp-installer'
+    Plug 'williamboman/mason.nvim'
+    Plug 'williamboman/mason-lspconfig.nvim'
     Plug 'neovim/nvim-lspconfig'
-    Plug 'williamboman/nvim-lsp-installer'
     Plug 'jose-elias-alvarez/null-ls.nvim'
+    " lspkind
+    Plug 'onsails/lspkind-nvim'
     Plug 'hrsh7th/cmp-nvim-lua'
     Plug 'hrsh7th/cmp-nvim-lsp'
     Plug 'hrsh7th/cmp-buffer'
@@ -45,7 +49,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'hrsh7th/vim-vsnip'
     Plug 'hrsh7th/cmp-vsnip'
     Plug 'nvim-lua/lsp-status.nvim'
-    Plug 'folke/trouble.nvim'
+    " Plug 'folke/trouble.nvim'
     Plug 'ray-x/lsp_signature.nvim'
     Plug 'weilbith/nvim-code-action-menu'
     Plug 'kosayoda/nvim-lightbulb'
@@ -59,7 +63,7 @@ call plug#begin('~/.vim/plugged')
     " Treesitter
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
     " Different color brackets
-    Plug 'p00f/nvim-ts-rainbow'
+    Plug 'HiPhish/nvim-ts-rainbow2'
     Plug 'nvim-treesitter/nvim-treesitter-context'
 
     " Utils
@@ -88,6 +92,7 @@ call plug#begin('~/.vim/plugged')
     Plug 'kyazdani42/nvim-tree.lua'
     " Testing
     Plug 'janko-m/vim-test'
+    Plug 'andythigpen/nvim-coverage'
 
     " Debugging
     Plug 'ray-x/guihua.lua', { 'do': 'cd lua/fzy && make' }
@@ -103,12 +108,20 @@ call plug#begin('~/.vim/plugged')
     " Buffers
     Plug 'akinsho/bufferline.nvim'
 
+    " Refactor
+    Plug 'ThePrimeagen/refactoring.nvim'
+
     " Undo
     " Plug 'mbbill/undotree'
 
     " Colour Scheme & Icons
     Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
     Plug 'kyazdani42/nvim-web-devicons'
+
+    " Copilot
+    " Plug 'github/copilot.vim'
+    Plug 'zbirenbaum/copilot.lua'
+    Plug 'zbirenbaum/copilot-cmp'
 call plug#end()
 
 " project specific config files
@@ -315,6 +328,7 @@ hi FloatermBorder guifg=orange
 " Text
 set nojoinspaces " Better J joins
 autocmd BufWinEnter * set formatoptions+=j " better joins with comments
+autocmd BufWinEnter * set formatoptions-=cro
 
 " Filetypes
 " autocmd BufRead,BufNewFile *.js,*.ts,*.tsx,*.vue,*.json set tabstop=2
@@ -535,6 +549,7 @@ nnoremap <silent>gr <cmd>lua vim.lsp.buf.references()<CR><CR>
 nnoremap <silent><c-up> <cmd>lua vim.diagnostic.goto_prev()<CR>
 nnoremap <silent><c-down> <cmd>lua vim.diagnostic.goto_next()<CR>
 nnoremap <silent><leader>f <cmd>lua vim.lsp.buf.code_action()<CR>
+nnoremap <silent><leader>; :cclose<CR>
 " nnoremap <silent><leader>f :CodeActionMenu<CR>
 autocmd User CompeConfirmDone :lua vim.lsp.buf.signature_help()
 
@@ -553,3 +568,4 @@ endif
 
 " Lua settings
 lua require('settings')
+Coverage

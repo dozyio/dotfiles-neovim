@@ -2,7 +2,7 @@ require'nvim-treesitter.configs'.setup {
     ensure_installed = "all",
     highlight = {
         enable = true,
-        -- additional_vim_regex_highlighting = true
+        additional_vim_regex_highlighting = false
     },
     indent = {
         enable = false,
@@ -11,6 +11,8 @@ require'nvim-treesitter.configs'.setup {
         enable = true,
         extended_mode = true, -- Also highlight non-bracket delimiters like html tags, boolean or table: lang -> boolean
         max_file_lines = 2000, -- Do not enable for files with more than 2000 lines, int
+        query = 'rainbow-parens',
+        strategy = require 'ts-rainbow.strategy.global',
         colors = {
             "#bf616a",
             "#d08770",
