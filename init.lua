@@ -1,6 +1,6 @@
-vim.g.mapleader = "\\"
+vim.g.mapleader = '\\'
 
--- Plugins
+-- Setup Lazy package manager
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
@@ -8,14 +8,14 @@ if not vim.loop.fs_stat(lazypath) then
     "clone",
     "--filter=blob:none",
     "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
+    "--branch=stable",
     lazypath,
   })
 end
 vim.opt.rtp:prepend(lazypath)
 
+-- Plugin
 require("lazy").setup({
-
   -- Theme
   {
     "folke/tokyonight.nvim",
@@ -39,9 +39,16 @@ require("lazy").setup({
   "tpope/vim-fugitive",
 
   -- Utils
-  "folke/which-key.nvim",
+  {
+    "folke/which-key.nvim",
+    event = "VeryLazy",
+    init = function()
+      vim.o.timeout = true
+      vim.o.timeoutlen = 300
+    end,
+    opts = {}
+  }
 })
-
 
 -- Mouse
 vim.opt.mouse = ""
@@ -62,8 +69,12 @@ vim.opt.relativenumber = true
 vim.opt.number = true
 vim.keymap.set("n", "<C-n>", ":set invrelativenumber<CR>")
 
+-- Text
+vim.cmd([[autocmd BufEnter * set formatoptions+=j]]) -- better joins with comments
+vim.cmd([[autocmd BufEnter * set formatoptions-=cro]]) -- don't continue comments on next line
+
 -- Git
-require('gitsigns').setup()
+require("git")
 
 -- Theme
 require("theme")
