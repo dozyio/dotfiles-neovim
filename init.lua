@@ -23,14 +23,12 @@ require("lazy").setup({
   { "catppuccin/nvim",            name = "catppuccin" },
 
   -- Icons
-  {
-    "kyazdani42/nvim-web-devicons",
-  },
+  "kyazdani42/nvim-web-devicons",
 
   -- Treesitter
   "nvim-treesitter/nvim-treesitter",
-  { "nvim-treesitter/playground", event = "VeryLazy", },
   "HiPhish/nvim-ts-rainbow2",
+  { "nvim-treesitter/playground", event = "VeryLazy", },
 
   -- Git
   "lewis6991/gitsigns.nvim",
@@ -79,6 +77,13 @@ require("lazy").setup({
       vim.o.timeout = true
       vim.o.timeoutlen = 300
     end,
+    opts = {}
+  },
+
+  -- Sessions
+  {
+    "folke/persistence.nvim",
+    event = "BufReadPre",
     opts = {}
   },
 
@@ -131,6 +136,7 @@ require("core")
 require("git")
 require("lsp")
 require("navigation")
+require("session")
 require("statusbar")
 require("theme")
 require("treesitter")
