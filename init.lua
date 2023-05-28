@@ -14,6 +14,11 @@ vim.opt.rtp:prepend(lazypath)
 
 -- Plugins
 require("lazy").setup({
+  -- Libs
+  "nvim-lua/plenary.nvim",
+  "nvim-lua/popup.nvim",
+  "MunifTanjim/nui.nvim",
+
   -- Theme
   { "catppuccin/nvim",            name = "catppuccin" },
 
@@ -44,7 +49,7 @@ require("lazy").setup({
   { "nvim-telescope/telescope-fzy-native.nvim", event = "VeryLazy", },
   { "ethanholz/nvim-lastplace", },
 
-  -- Winbar & Buffers
+  -- Winbar / Buffers
   {
     "akinsho/bufferline.nvim",
     after = "catppuccin",
@@ -76,11 +81,6 @@ require("lazy").setup({
     end,
     opts = {}
   },
-
-  -- Libs
-  "nvim-lua/plenary.nvim",
-  "nvim-lua/popup.nvim",
-  "MunifTanjim/nui.nvim",
 
   -- Debugging
   "ray-x/guihua.lua",
@@ -125,7 +125,6 @@ require("lazy").setup({
   },
   -- markdown
   { "iamcco/markdown-preview.nvim", build = ":call mkdp#util#install()" },
-
 })
 
 require("core")

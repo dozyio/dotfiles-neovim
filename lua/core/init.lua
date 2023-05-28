@@ -75,14 +75,18 @@ vim.keymap.set("n", "N", "Nzzzv", { noremap = true, nowait = true, silent = true
 -- search and replace current word
 vim.keymap.set("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>/")
 vim.keymap.set("n", "<leader><space>", ":nohlsearch<CR>")
+-- keep search centered
+vim.keymap.set("n", "n", "nzzzv", { noremap = true, nowait = true, silent = true })
+vim.keymap.set("n", "N", "Nzzzv", { noremap = true, nowait = true, silent = true })
+
 
 -- Scrolling
 vim.o.scrolloff = 8
 vim.o.sidescrolloff = 5
 
 -- Visual move
-vim.keymap.set("v", "J", "nzzzv", { noremap = true, nowait = true, silent = true })
-vim.keymap.set("v", "K", "Nzzzv", { noremap = true, nowait = true, silent = true })
+vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", { noremap = true, nowait = true, silent = true })
+vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv", { noremap = true, nowait = true, silent = true })
 
 -- Spacing
 vim.o.listchars = ""
