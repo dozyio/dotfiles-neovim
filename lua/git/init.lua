@@ -88,3 +88,6 @@ wk.register({
     silent = true,
   },
 })
+
+
+vim.keymap.set('n', '<leader>hl', ":LazyGit<CR>")
