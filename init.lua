@@ -1,6 +1,6 @@
 vim.g.mapleader = '\\'
 
--- Setup Lazy package manager
+-- Setup Lazy plugin manager
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
@@ -14,7 +14,7 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- Plugin
+-- Plugins
 require("lazy").setup({
   -- Theme
   {
@@ -39,7 +39,14 @@ require("lazy").setup({
   "tpope/vim-fugitive",
 
   -- Navigation
-  "nvim-neo-tree/neo-tree.nvim",
+  { "kyazdani42/nvim-tree.lua", event = "VeryLazy", },
+  { "nvim-telescope/telescope.nvim", event = "VeryLazy", },
+
+  -- Winbar & Buffers
+  { "akinsho/bufferline.nvim", event = "VeryLazy", },
+
+  -- Status bar
+  { "nvim-lualine/lualine.nvim", event = "VeryLazy", },
 
   -- Utils
   {
@@ -51,7 +58,10 @@ require("lazy").setup({
     end,
     opts = {}
   },
+
+  -- Libs
   "nvim-lua/plenary.nvim",
+  "nvim-lua/popup.nvim",
   "MunifTanjim/nui.nvim",
 })
 
@@ -99,18 +109,15 @@ vim.opt.title = true
 -- Files
 vim.opt.fileformats = "unix"
 
--- Misc
--- disable inline vim commands in files
-vim.opt.modelines = 0
--- for status bars
-vim.opt.winminheight = 0
--- save previous commands, history etc
-vim.opt.shada = "!,'100,<100,:100,s10,%,h" -- see :h 'shada'
+-- Project specific config files
+-- execute .nvimrc files in current dir
+vim.opt.exrc = true
 
 -- Undo
 vim.opt.undofile = true
 vim.opt.undolevels = 1000
 vim.opt.undoreload = 10000
+vim.opt.undodir = os.getenv('HOME') .. "/.local/state/nvim/undo/"
 -- additional undo breakpoints
 vim.keymap.set("i", ",", ",<c-g>u", { noremap = true, nowait = true, silent = true })
 vim.keymap.set("i", ".", ".<c-g>u", { noremap = true, nowait = true, silent = true })
@@ -135,7 +142,46 @@ vim.keymap.set("n", "N", "Nzzzv", { noremap = true, nowait = true, silent = true
 -- search and replace current word
 vim.keymap.set("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>/")
 
+-- Scrolling
+vim.opt.scrolloff = 8
+vim.opt.sidescrolloff = 5
+
+-- Visual move
+vim.keymap.set("v", "J", "nzzzv", { noremap = true, nowait = true, silent = true })
+vim.keymap.set("v", "K", "Nzzzv", { noremap = true, nowait = true, silent = true })
+
+-- Spacing
+vim.opt.listchars = ""
+vim.opt.list = false
+-- vim.cmd("let c_space_errors 1")
+
+-- Cursor
+-- block cursor in insert mode
+vim.opt.guicursor = ""
+
+-- Columns
+vim.opt.colorcolumn = "80,120"
+
+-- Navigation
+vim.cmd("set nostartofline")
+-- move to start/end of line 
+vim.keymap.set("c", "<c-a>", "<home>")
+vim.keymap.set("c", "<c-e>", "<end>")
+
+-- Buffer
+vim.keymap.set("n", "<c-x>", ":bd<CR>", { noremap = true, silent = true })
+
+-- Misc
+-- disable inline vim commands in files
+vim.opt.modelines = 0
+-- for status bars
+vim.opt.winminheight = 0
+-- save previous commands, history etc
+vim.opt.shada = "!,'100,<100,:100,s10,%,h" -- see :h 'shada'
+
 require("lua/git/init")
+require("lua/navigation/init")
+require("lua/statusbar/init")
 require("lua/theme/init")
 require("lua/treesitter/init")
-require("lua/navigation/init")
+require("lua/winbar/init")

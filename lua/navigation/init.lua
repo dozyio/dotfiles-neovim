@@ -1,72 +1,37 @@
--- Neotree
-require("neo-tree").setup({
-  default_component_configs = {
-    icon = {
-      folder_empty = "󰜌",
-      folder_empty_open = "󰜌",
-    },
-    git_status = {
-      symbols = {
-        renamed   = "󰁕",
-        unstaged  = "󰄱",
-      },
-    },
-  },
-  document_symbols = {
-    kinds = {
-      File = { icon = "󰈙", hl = "Tag" },
-      Namespace = { icon = "󰌗", hl = "Include" },
-      Package = { icon = "󰏖", hl = "Label" },
-      Class = { icon = "󰌗", hl = "Include" },
-      Property = { icon = "󰆧", hl = "@property" },
-      Enum = { icon = "󰒻", hl = "@number" },
-      Function = { icon = "󰊕", hl = "Function" },
-      String = { icon = "󰀬", hl = "String" },
-      Number = { icon = "󰎠", hl = "Number" },
-      Array = { icon = "󰅪", hl = "Type" },
-      Object = { icon = "󰅩", hl = "Type" },
-      Key = { icon = "󰌋", hl = "" },
-      Struct = { icon = "󰌗", hl = "Type" },
-      Operator = { icon = "󰆕", hl = "Operator" },
-      TypeParameter = { icon = "󰊄", hl = "Type" },
-      StaticMethod = { icon = '󰠄 ', hl = 'Function' },
-    }
-  },
-  -- Add this section only if you've configured source selector.
-  source_selector = {
-    sources = {
-      { source = "filesystem", display_name = " 󰉓 Files " },
-      { source = "git_status", display_name = " 󰊢 Git " },
-    },
-  },
-  close_if_last_window = true,
-  window = {
-    width = 30,
-  },
-  filesystem = {
-    filtered_items = {
-      hide_dotfiles = false,
-      hide_gitignored = false,
-      hide_by_name = {
-        ".git"
-      },
-    }
-  },
+-- nvim-tree
+require("nvim-tree").setup({
+  filters = { custom = { "^.git$" } }
 })
 
 -- Actions
-vim.keymap.set("n", "<leader>n", ":NeoTreeRevealToggle<CR>")
+vim.keymap.set("n", "<leader>n", ":NvimTreeToggle<CR>")
 vim.keymap.set("n", "<C-Left>", ":bprevious<CR>", { noremap = true, nowait = true, silent = true })
 vim.keymap.set("n", "<C-Right>", ":bnext<CR>", { noremap = true, nowait = true, silent = true })
-
 
 -- Which Key
 local wk = require("which-key")
 wk.register({
   ["<leader>"] = {
     n = {
-      name = "NeoTree",
-      n = "NeoTree"
+      name = "nvim-tree",
+      n = "nvim-tree"
     },
   },
+})
+
+vim.api.nvim_create_autocmd("QuitPre", {
+  callback = function()
+    local invalid_win = {}
+    local wins = vim.api.nvim_list_wins()
+    for _, w in ipairs(wins) do
+      local bufname = vim.api.nvim_buf_get_name(vim.api.nvim_win_get_buf(w))
+      if bufname:match("NvimTree_") ~= nil then
+        table.insert(invalid_win, w)
+      end
+    end
+    if #invalid_win == #wins - 1 then
+      -- Should quit, so we close all invalid windows.
+      for _, w in ipairs(invalid_win) do vim.api.nvim_win_close(w, true) end
+    end
+  end
 })
