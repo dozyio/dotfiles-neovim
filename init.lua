@@ -87,6 +87,20 @@ require("lazy").setup({
     opts = {}
   },
 
+  -- Context
+  {
+    "utilyre/barbecue.nvim",
+    name = "barbecue",
+    version = "*",
+    dependencies = {
+      "SmiteshP/nvim-navic",
+    },
+    opts = {},
+  },
+
+  -- Terminal
+  "akinsho/toggleterm.nvim",
+
   -- Debugging
   "ray-x/guihua.lua",
 
@@ -138,6 +152,8 @@ require("lsp")
 require("navigation")
 require("session")
 require("statusbar")
+require("terminal")
 require("theme")
 require("treesitter")
 require("winbar")
+require("languages/go")
