@@ -20,7 +20,11 @@ require("lazy").setup({
   "MunifTanjim/nui.nvim",
 
   -- Theme
-  { "catppuccin/nvim",            name = "catppuccin" },
+  {
+    "catppuccin/nvim",
+    name = "catppuccin",
+    priority = 1,
+  },
 
   -- Icons
   "kyazdani42/nvim-web-devicons",
@@ -35,27 +39,23 @@ require("lazy").setup({
   "rhysd/committia.vim",
   {
     "kdheepak/lazygit.nvim",
-    -- optional for floating window border decoration
     dependencies = {
       "nvim-lua/plenary.nvim",
     },
   },
 
   -- Navigation
-  { "kyazdani42/nvim-tree.lua",                 event = "VeryLazy", },
-  { "nvim-telescope/telescope.nvim",            event = "VeryLazy", },
+  { "kyazdani42/nvim-tree.lua", event = "VeryLazy", },
+  { "nvim-telescope/telescope.nvim", event = "VeryLazy", },
   { "nvim-telescope/telescope-fzy-native.nvim", event = "VeryLazy", },
   { "ethanholz/nvim-lastplace", },
 
   -- Winbar / Buffers
   {
     "akinsho/bufferline.nvim",
-    after = "catppuccin",
-    config = function()
-      require("bufferline").setup {
-        highlights = require("catppuccin.groups.integrations.bufferline").get()
-      }
-    end
+    dependencies = {
+      "catppuccin/nvim",
+    },
   },
 
   -- Status bar
@@ -66,7 +66,7 @@ require("lazy").setup({
   {
     "numToStr/Comment.nvim",
     event = "VeryLazy",
-    config = function() require('Comment').setup() end
+    config = true
   },
 
   -- Utils
@@ -109,25 +109,37 @@ require("lazy").setup({
 
   -- LSP
   {
-    'VonHeikemen/lsp-zero.nvim',
-    branch = 'v2.x',
+    "VonHeikemen/lsp-zero.nvim",
+    branch = "v2.x",
     dependencies = {
-      { 'neovim/nvim-lspconfig' },
+      { "neovim/nvim-lspconfig" },
       {
-        'williamboman/mason.nvim',
+        "williamboman/mason.nvim",
         build = function()
-          pcall(vim.cmd, 'MasonUpdate')
+          pcall(vim.cmd, "MasonUpdate")
         end,
       },
-      { 'williamboman/mason-lspconfig.nvim' },
-      { 'hrsh7th/nvim-cmp' },
-      { 'hrsh7th/cmp-nvim-lsp' },
-      { 'hrsh7th/cmp-nvim-lsp-signature-help' },
-      { 'hrsh7th/cmp-buffer' },
-      { 'hrsh7th/cmp-path' },
-      { 'L3MON4D3/LuaSnip' },
+      { "williamboman/mason-lspconfig.nvim" },
+      { "hrsh7th/nvim-cmp" },
+      { "hrsh7th/cmp-nvim-lsp" },
+      { "hrsh7th/cmp-nvim-lsp-signature-help" },
+      { "hrsh7th/cmp-buffer" },
+      { "hrsh7th/cmp-path" },
+      { "L3MON4D3/LuaSnip" },
+      -- Copilot
+      {
+        "zbirenbaum/copilot.lua",
+        config = {
+          suggestion = { enabled = false },
+          panel = { enabled = false },
+        },
+      },
+      { "zbirenbaum/copilot-cmp", config = true },
     }
   },
+
+  -- Quickfix
+  "kevinhwang91/nvim-bqf",
 
   -- Languages
   -- go
@@ -142,7 +154,7 @@ require("lazy").setup({
       require("go").setup()
     end,
     event = { "CmdlineEnter" },
-    ft = { "go", 'gomod' },
+    ft = { "go", "gomod" },
     build = ':lua require("go.install").update_all_sync()' -- installs binaries
   },
   -- markdown

@@ -19,7 +19,7 @@ vim.keymap.set("n", "<C-n>", ":set invrelativenumber<CR>", { desc = "Toggle rela
 
 -- Text
 vim.cmd([[autocmd BufEnter * set formatoptions+=j]]) -- better joins with comments
-vim.cmd([[autocmd BufEnter * set formatoptions-=cro]]) -- don't continue comments on next line
+vim.cmd([[autocmd BufEnter * set formatoptions-=cro]]) -- no continuation of comments
 
 -- Copy & Paste
  -- copy file to system buffer
@@ -108,6 +108,10 @@ vim.keymap.set("n", "<c-x>", ":bd<CR>", { noremap = true, silent = true, desc = 
 
 -- Mouse
 vim.o.mouse = ""
+
+-- Highlight
+-- trailing spaces
+vim.cmd("match errorMsg '/\\s\\+$/'")
 
 -- Misc
 -- disable inline vim commands in files

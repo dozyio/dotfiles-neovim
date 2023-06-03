@@ -5,8 +5,10 @@ require("nvim-tree").setup({
 
 -- Actions
 vim.keymap.set("n", "<leader>n", ":NvimTreeToggle<CR>", { desc = "NvimTree toggle" })
-vim.keymap.set("n", "<C-Left>", ":bprevious<CR>", { noremap = true, nowait = true, silent = true, desc = "Previous buffer" })
-vim.keymap.set("n", "<C-Right>", ":bnext<CR>", { noremap = true, nowait = true, silent = true, desc = "Next buffer" })
+vim.keymap.set("n", "<c-Left>", ":bprevious<CR>", { noremap = true, nowait = true, silent = true, desc = "Previous buffer" })
+vim.keymap.set("n", "<c-Right>", ":bnext<CR>", { noremap = true, nowait = true, silent = true, desc = "Next buffer" })
+vim.keymap.set("n", "<Tab>", "<c-w>w", { desc = "Next window" })
+vim.keymap.set("n", "<S-Tab>", "<c-w>W", { desc = "Previous window" })
 
 -- Close if nvim-tree is last buffer
 vim.api.nvim_create_autocmd("QuitPre", {
@@ -44,8 +46,9 @@ require("telescope").setup({
 
     mappings = {
       i = {
-        ["<C-x>"] = false,
-        ["<C-q>"] = actions.send_to_qflist + actions.open_qflist,
+        ["esc>"] = actions.close,
+        ["<c-x>"] = actions.close,
+        ["<c-q>"] = actions.send_to_qflist + actions.open_qflist,
       },
     },
     file_ignore_patterns = { "^.git/.*", },

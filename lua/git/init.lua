@@ -1,7 +1,7 @@
 require('gitsigns').setup({
   signcolumn = false,
   linehl = true,
-  word_diff = true,
+  word_diff = false,
   numhl = true,
   current_line_blame_opts = {
     delay = 0,
@@ -20,13 +20,13 @@ require('gitsigns').setup({
      if vim.wo.diff then return ']c' end
       vim.schedule(function() gs.next_hunk() end)
       return '<Ignore>'
-    end, {expr=true})
+    end, { expr=true, desc="Next hunk" })
 
     map('n', '[c', function()
       if vim.wo.diff then return '[c' end
       vim.schedule(function() gs.prev_hunk() end)
       return '<Ignore>'
-    end, {expr=true})
+    end, { expr=true, desc="Previous hunk" })
 
     -- Actions
     map('n', '<leader>hl', ":LazyGit<CR>", { desc = "LazyGit" })

@@ -1,3 +1,11 @@
+-- vim.cmd("highlight TSRainbowRed guifg=#E06C75 ctermfg=White")
+-- vim.cmd("highlight TSRainbowYellow guifg=#E5C07B ctermfg=White")
+-- vim.cmd("highlight TSRainbowBlue guifg=#98C379 ctermfg=White")
+-- vim.cmd("highlight TSRainbowOrange guifg=#56B6C2 ctermfg=White")
+-- vim.cmd("highlight TSRainbowGreen guifg=#61AFEF ctermfg=White")
+-- vim.cmd("highlight TSRainbowViolet guifg=#C678DD ctermfg=White")
+-- vim.cmd("highlight TSRainbowCyan guifg=#d65d0e ctermfg=White")
+
 require'nvim-treesitter.configs'.setup {
   ensure_installed = "all",
   highlight = {
@@ -5,7 +13,7 @@ require'nvim-treesitter.configs'.setup {
     additional_vim_regex_highlighting = false
   },
   disable = function(lang, buf)
-    local max_filesize = 256 * 1024 -- 100 KB
+    local max_filesize = 256 * 1024
     local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
     if ok and stats and stats.size > max_filesize then
       return true
@@ -16,10 +24,9 @@ require'nvim-treesitter.configs'.setup {
   },
   rainbow = {
     enable = true,
-    extended_mode = true, -- Also highlight non-bracket delimiters like html tags, boolean or table: lang -> boolean
-    max_file_lines = 2000, -- Do not enable for files with more than 2000 lines, int
+    extended_mode = true,
+    max_file_lines = 2500,
     query = 'rainbow-parens',
     strategy = require('ts-rainbow').strategy.global
   }
 }
-

@@ -14,6 +14,7 @@ local cmp_action = require('lsp-zero').cmp_action()
 
 cmp.setup({
   sources = {
+    { name = 'copliot' },
     { name = 'nvim_lsp' },
     { name = 'nvim_lsp_signature_help' },
     { name = 'path' },
@@ -47,8 +48,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { noremap = true, nowait = true, silent = true, desc= "Goto definition" })
     vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, { noremap = true, nowait = true, silent = true, desc = "Goto declaration" })
     vim.keymap.set('n', 'gI', vim.lsp.buf.implementation,  { noremap = true, nowait = true, silent = true, desc = "Goto implemntation" })
-    vim.reymap.set('n', 'gr', vim.lsp.buf.references, { buffer = ev.buf, desc = "Goto references" })
-    vim.reymap.set('n', 'gR', vim.lsp.buf.rename, { desc = "Rename symbol" })
+    vim.keymap.set('n', 'gr', vim.lsp.buf.references, { buffer = ev.buf, desc = "Goto references" })
+    vim.keymap.set('n', 'gR', vim.lsp.buf.rename, { desc = "Rename symbol" })
     vim.keymap.set('n', 'gs', vim.lsp.buf.document_symbol, { desc = "Show symbols" })
     vim.keymap.set('n', '<leader>f', vim.lsp.buf.code_action, { buffer = ev.buf, desc = "Code action" })
     vim.keymap.set('n', '<leader>p', function()
