@@ -44,27 +44,17 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
     -- Buffer local mappings.
     -- See `:help vim.lsp.*` for documentation on any of the below functions
-    local opts = { buffer = ev.buf }
-    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { noremap = true, nowait = true, silent = true })
-    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, { noremap = true, nowait = true, silent = true })
-    vim.keymap.set('n', 'gI', vim.lsp.buf.implementation,  { noremap = true, nowait = true, silent = true })
-    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
-    vim.keymap.set('n', '<leader>f', vim.lsp.buf.code_action, opts)
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { noremap = true, nowait = true, silent = true, desc= "Goto definition" })
+    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, { noremap = true, nowait = true, silent = true, desc = "Goto declaration" })
+    vim.keymap.set('n', 'gI', vim.lsp.buf.implementation,  { noremap = true, nowait = true, silent = true, desc = "Goto implemntation" })
+    vim.reymap.set('n', 'gr', vim.lsp.buf.references, { buffer = ev.buf, desc = "Goto references" })
+    vim.reymap.set('n', 'gR', vim.lsp.buf.rename, { desc = "Rename symbol" })
+    vim.keymap.set('n', 'gs', vim.lsp.buf.document_symbol, { desc = "Show symbols" })
+    vim.keymap.set('n', '<leader>f', vim.lsp.buf.code_action, { buffer = ev.buf, desc = "Code action" })
     vim.keymap.set('n', '<leader>p', function()
       vim.lsp.buf.format { async = true }
-    end, opts)
-    vim.keymap.set('n', '<c-_>', vim.lsp.buf.hover, { noremap = true, nowait = true, silent = true })
-    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
+    end, { buffer = ev.buf, desc = "Format" })
+    vim.keymap.set('n', '<c-->', vim.lsp.buf.hover, { noremap = true, nowait = true, silent = true, desc = "Hover info"})
+    vim.keymap.set('n', '<c-k>', vim.lsp.buf.signature_help, { buffer = ev.buf })
   end,
-})
-
--- Which Key
-local wk = require("which-key")
-wk.register({
-  ["gd"] = { "Goto definition" },
-  ["gD"] = { "Goto declaration" },
-  ["gI"] = { "Goto implementation" },
-  ["gr"] = { "View references" },
-  ["<leader>f"] = { "Code action" },
-  ["<leader>p"] = { "Format" },
 })

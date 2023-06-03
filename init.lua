@@ -98,6 +98,9 @@ require("lazy").setup({
     opts = {},
   },
 
+  -- Indent
+  "lukas-reineke/indent-blankline.nvim",
+
   -- Terminal
   "akinsho/toggleterm.nvim",
 
@@ -148,6 +151,8 @@ require("lazy").setup({
 
 require("core")
 require("git")
+require("indent")
+require("languages/go")
 require("lsp")
 require("navigation")
 require("session")
@@ -156,4 +161,3 @@ require("terminal")
 require("theme")
 require("treesitter")
 require("winbar")
-require("languages/go")
