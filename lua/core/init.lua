@@ -22,11 +22,9 @@ vim.cmd([[autocmd BufEnter * set formatoptions+=j]]) -- better joins with commen
 vim.cmd([[autocmd BufEnter * set formatoptions-=cro]]) -- no continuation of comments
 
 -- Copy & Paste
- -- copy file to system buffer
+vim.keymap.set("v", "y", "ygv<esc>", { desc = "Keep end position after yank" })
 vim.keymap.set("n", "<leader>y", ":%y+<cr>", { noremap = true, nowait = true, silent = true, desc = "Copy file to system buffer" })
--- copy line to system buffer
 vim.keymap.set("n", "<leader>c", "V\"+y", { noremap = true, nowait = true, silent = true, desc = "Copy current line to system buffer" })
- -- copy selection to system buffer
 vim.keymap.set("v", "<leader>c", "\"+y", { noremap = true, nowait = true, silent = true, desc = "Copy selected to system buffer" })
 
 -- Delete
@@ -53,6 +51,7 @@ vim.o.undofile = true
 vim.o.undolevels = 1000
 vim.o.undoreload = 10000
 vim.o.undodir = os.getenv('HOME') .. "/.local/state/nvim/undo/"
+vim.keymap.set("n", "U", "<C-r>", { desc = "Redo" })
 -- additional undo breakpoints
 vim.keymap.set("i", ",", ",<c-g>u", { noremap = true, nowait = true, silent = true })
 vim.keymap.set("i", ".", ".<c-g>u", { noremap = true, nowait = true, silent = true })
@@ -88,7 +87,6 @@ vim.o.sidescrolloff = 5
 -- Spacing
 vim.o.listchars = ""
 vim.o.list = false
--- vim.cmd("let c_space_errors 1")
 
 -- Cursor
 -- block cursor in insert mode
@@ -100,11 +98,12 @@ vim.o.colorcolumn = "80,120"
 -- Navigation
 vim.cmd("set nostartofline")
 -- move to start/end of line 
-vim.keymap.set("c", "<c-a>", "<home>")
-vim.keymap.set("c", "<c-e>", "<end>")
+vim.keymap.set("c", "<c-a>", "<home>", { desc = "Jump to start of command" })
+vim.keymap.set("c", "<c-e>", "<end>", { desc = "Jump to end of command" })
 
 -- Buffer
 vim.keymap.set("n", "<c-x>", ":bd<CR>", { noremap = true, silent = true, desc = "Close current buffer" })
+vim.keymap.set("n", "<c-X>", ":bd!<CR>", { noremap = true, silent = true, desc = "Close current buffer" })
 
 -- Mouse
 vim.o.mouse = ""
