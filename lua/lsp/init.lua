@@ -13,13 +13,17 @@ local cmp = require('cmp')
 local cmp_action = require('lsp-zero').cmp_action()
 
 cmp.setup({
+  snippet = {
+    expand = function(args)
+      require('luasnip').lsp_expand(args.body)
+    end,
+  },
   sources = {
-    { name = 'copliot' },
+    { name = 'copilot' },
     { name = 'nvim_lsp' },
-    { name = 'nvim_lsp_signature_help' },
     { name = 'path' },
     { name = 'buffer', keyword_length = 3 },
-    { name = 'luasnip', keyword_length = 2 },
+    { name = 'luasnip', group_index = 2 },
   },
   mapping = {
     ['<CR>'] = cmp.mapping.confirm({select = false}),
@@ -29,6 +33,29 @@ cmp.setup({
   window = {
     completion = cmp.config.window.bordered(),
     documentation = cmp.config.window.bordered(),
+  },
+  sorting = {
+    priority_weight = 2,
+    comparators = {
+      require("copilot_cmp.comparators").prioritize,
+
+      -- Below is the default comparitor list and order for nvim-cmp
+      cmp.config.compare.offset,
+      -- cmp.config.compare.scopes, --this is commented in nvim-cmp too
+      cmp.config.compare.exact,
+      cmp.config.compare.score,
+      cmp.config.compare.recently_used,
+      cmp.config.compare.locality,
+      cmp.config.compare.kind,
+      cmp.config.compare.sort_text,
+      cmp.config.compare.length,
+      cmp.config.compare.order,
+    },
+  },
+  experimental = {
+    ghost_text = {
+      hl_group = "LspCodeLens",
+    },
   },
 })
 

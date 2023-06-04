@@ -115,9 +115,7 @@ require("lazy").setup({
       { "neovim/nvim-lspconfig" },
       {
         "williamboman/mason.nvim",
-        build = function()
-          pcall(vim.cmd, "MasonUpdate")
-        end,
+        build = function() pcall(vim.cmd, "MasonUpdate") end,
       },
       { "williamboman/mason-lspconfig.nvim" },
       { "hrsh7th/nvim-cmp" },
@@ -126,15 +124,20 @@ require("lazy").setup({
       { "hrsh7th/cmp-buffer" },
       { "hrsh7th/cmp-path" },
       { "L3MON4D3/LuaSnip" },
+      { "saadparwaiz1/cmp_luasnip" },
       -- Copilot
       {
         "zbirenbaum/copilot.lua",
-        config = {
+        opts = {
           suggestion = { enabled = false },
           panel = { enabled = false },
         },
       },
-      { "zbirenbaum/copilot-cmp", config = true },
+      {
+        "zbirenbaum/copilot-cmp",
+        event = { "InsertEnter", "LspAttach" },
+        config = true
+      },
     }
   },
 
