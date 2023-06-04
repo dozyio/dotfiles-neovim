@@ -8,6 +8,7 @@ vim.o.termguicolors = true
 
 require("indent_blankline").setup {
   show_current_context = true,
+  use_treesitter = true,
   -- show_current_context_start = true,
   -- char_highlight_list = {
   --   "IndentBlanklineIndent1",
