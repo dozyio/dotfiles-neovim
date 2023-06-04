@@ -1,8 +1,4 @@
--- Nvim-Tree
-require("nvim-tree").setup({
-  filters = { custom = { "^.git$" } }
-})
-
+-- NvimTree
 -- Actions
 vim.keymap.set("n", "<leader>n", ":NvimTreeToggle<CR>", { desc = "NvimTree toggle" })
 vim.keymap.set("n", "<c-Left>", ":bprevious<CR>", { noremap = true, nowait = true, silent = true, desc = "Previous buffer" })
@@ -72,10 +68,3 @@ require("telescope").load_extension("fzy_native")
 vim.keymap.set('n', '<c-p>', builtin.find_files, { noremap = true, nowait = true, silent = true, desc = "Find files" })
 vim.keymap.set('n', '<c-g>', builtin.live_grep, { noremap = true, nowait = true, silent = true, desc = "Grep" })
 vim.keymap.set('n', '<c-t>', builtin.resume, { noremap = true, nowait = true, silent = true, desc = "Resume Telescope" })
-
--- Nvim-Lastplace
-require("nvim-lastplace").setup({
-  lastplace_ignore_buftype = {"quickfix", "nofile", "help"},
-  lastplace_ignore_filetype = {"gitcommit", "gitrebase", "svn", "hgcommit"},
-  lastplace_open_folds = true
-})

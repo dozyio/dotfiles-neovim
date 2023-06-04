@@ -1,5 +1,3 @@
-require("toggleterm").setup({})
-
 function _G.set_terminal_keymaps()
   vim.keymap.set('t', '<esc>', [[<c-\><c-n>]], { buffer = 0, desc = "Normal mode" })
   vim.keymap.set('t', '<c-w>', [[<c-\><c-n><c-w>]], { buffer = 0, desc = "Change window" })

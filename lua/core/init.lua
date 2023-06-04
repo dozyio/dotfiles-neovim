@@ -1,6 +1,3 @@
--- Leader
-vim.g.mapleader = '\\'
-
 -- Tabs
 vim.o.tabstop = 2
 vim.o.softtabstop = 0
@@ -119,3 +116,5 @@ vim.o.modelines = 0
 vim.o.winminheight = 0
 -- save previous commands, history etc
 vim.o.shada = "!,'100,<100,:100,s10,%,h" -- see :h 'shada'
+-- terminal colours
+vim.o.termguicolors = true

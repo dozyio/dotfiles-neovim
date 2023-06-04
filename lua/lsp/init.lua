@@ -23,7 +23,7 @@ cmp.setup({
     { name = 'nvim_lsp' },
     { name = 'path' },
     { name = 'buffer', keyword_length = 3 },
-    { name = 'luasnip', group_index = 2 },
+    { name = 'luasnip' },
   },
   mapping = {
     ['<CR>'] = cmp.mapping.confirm({select = false}),
