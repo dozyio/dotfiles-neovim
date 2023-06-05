@@ -1,5 +1,7 @@
 -- Leader - set before lazy
 vim.g.mapleader = '\\'
+-- terminal colours
+vim.o.termguicolors = true
 
 -- Setup Lazy plugin manager
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"

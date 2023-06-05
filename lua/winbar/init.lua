@@ -3,12 +3,12 @@ require("bufferline").setup({
     highlights = require("catppuccin.groups.integrations.bufferline").get(),
     close_command = function(n) require("mini.bufremove").delete(n, false) end,
     right_mouse_command = function(n) require("mini.bufremove").delete(n, false) end,
-    show_close_icon = false,
-    show_buffer_close_icons = false,
+    show_close_icon = true,
+    show_buffer_close_icons = true,
     separator_style = "slant",
     max_name_length = 30,
     diagnostics = "nvim_lsp",
-    always_show_bufferline = true,
+    always_show_bufferline = false,
     indicator = {
       style = "underline"
     },

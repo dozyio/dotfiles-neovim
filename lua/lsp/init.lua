@@ -1,6 +1,6 @@
 local lsp = require('lsp-zero').preset({})
 
-lsp.on_attach(function(client, bufnr)
+lsp.on_attach(function(_, bufnr)
   lsp.default_keymaps({buffer = bufnr})
 end)
 
@@ -23,7 +23,7 @@ cmp.setup({
     { name = 'nvim_lsp' },
     { name = 'path' },
     { name = 'buffer', keyword_length = 3 },
-    { name = 'luasnip' },
+    -- { name = 'luasnip' },
   },
   mapping = {
     ['<CR>'] = cmp.mapping.confirm({select = false}),

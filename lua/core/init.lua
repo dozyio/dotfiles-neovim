@@ -103,7 +103,7 @@ vim.keymap.set("n", "<c-x>", ":bd<CR>", { noremap = true, silent = true, desc = 
 vim.keymap.set("n", "<c-X>", ":bd!<CR>", { noremap = true, silent = true, desc = "Close current buffer" })
 
 -- Mouse
-vim.o.mouse = ""
+vim.o.mouse = "nv"
 
 -- Highlight
 -- trailing spaces
@@ -116,5 +116,5 @@ vim.o.modelines = 0
 vim.o.winminheight = 0
 -- save previous commands, history etc
 vim.o.shada = "!,'100,<100,:100,s10,%,h" -- see :h 'shada'
--- terminal colours
-vim.o.termguicolors = true
+-- map ctrl-c to escape in insert mode, stops lsp from erroring
+vim.keymap.set({ "i", "n", "v" }, "<c-c>", "<esc>", { noremap = true, silent = true, desc = "Exit insert mode" })

@@ -45,7 +45,7 @@ return {
   },
   {
     "ethanholz/nvim-lastplace",
-    event = "VeryLazy",
+    event = "BufReadPost",
     opts = {
       lastplace_ignore_buftype = {"quickfix", "nofile", "help"},
       lastplace_ignore_filetype = {"gitcommit", "gitrebase", "svn", "hgcommit"},
@@ -58,6 +58,10 @@ return {
     "akinsho/bufferline.nvim",
     dependencies = {
       "catppuccin/nvim",
+      {
+        "echasnovski/mini.nvim",
+        version = false,
+      }
     },
   },
 
@@ -94,11 +98,13 @@ return {
   -- Sessions
   {
     "folke/persistence.nvim",
-    event = "VeryLazy",
+    event = "BufReadPre",
     opts = {}
   },
 
   -- Context / Breadcrumbs
+  -- TODO need both?
+  { "Bekaboo/dropbar.nvim" },
   {
     "utilyre/barbecue.nvim",
     name = "barbecue",
@@ -125,8 +131,6 @@ return {
         "help",
         "alpha",
         "dashboard",
-        "neo-tree",
-        "Trouble",
         "lazy",
         "mason",
         "notify",
@@ -164,7 +168,7 @@ return {
       -- Luasnip
       {
         "L3MON4D3/LuaSnip",
-        dependencies = { "rafamadriz/friendly-snippets" },
+        -- dependencies = { "rafamadriz/friendly-snippets" },
         config = function()
           require("luasnip.loaders.from_vscode").lazy_load({})
         end,
@@ -321,5 +325,36 @@ return {
         },
       }
     end,
+  },
+
+  -- New plugins to try
+  {
+    "folke/noice.nvim",
+    event = "VeryLazy",
+    opts = {
+      -- add any options here
+    },
+    dependencies = {
+      -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
+      "MunifTanjim/nui.nvim",
+      -- OPTIONAL:
+      --   `nvim-notify` is only needed, if you want to use the notification view.
+      --   If not available, we use `mini` as the fallback
+      {
+        "rcarriga/nvim-notify",
+        opts = {
+          timeout = 1500,
+          max_height = function()
+            return math.floor(vim.o.lines * 0.75)
+          end,
+          max_width = function()
+            return math.floor(vim.o.columns * 0.75)
+          end,
+        }
+      }
+    }
+  },
+  {
+    "lvimuser/lsp-inlayhints.nvim"
   },
 }
