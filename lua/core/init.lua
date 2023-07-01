@@ -12,7 +12,6 @@ vim.o.smartindent = true
 -- Line Numbering
 vim.o.relativenumber = true
 vim.o.number = true
-vim.keymap.set("n", "<C-n>", ":set invrelativenumber<CR>", { desc = "Toggle relative numbering" })
 
 -- Text
 vim.cmd([[autocmd BufEnter * set formatoptions+=j]]) -- better joins with comments
@@ -103,7 +102,7 @@ vim.keymap.set("n", "<c-x>", ":bd<CR>", { noremap = true, silent = true, desc = 
 vim.keymap.set("n", "<c-X>", ":bd!<CR>", { noremap = true, silent = true, desc = "Close current buffer" })
 
 -- Mouse
-vim.o.mouse = "nv"
+vim.o.mouse = "v"
 
 -- Highlight
 -- trailing spaces
@@ -118,3 +117,9 @@ vim.o.winminheight = 0
 vim.o.shada = "!,'100,<100,:100,s10,%,h" -- see :h 'shada'
 -- map ctrl-c to escape in insert mode, stops lsp from erroring
 vim.keymap.set({ "i", "n", "v" }, "<c-c>", "<esc>", { noremap = true, silent = true, desc = "Exit insert mode" })
+-- ignore editorconfig
+vim.g.editorconfig = false
+
+-- Json
+vim.keymap.set("n", "<leader>jp", ":%!jq .<CR>", { noremap = true, silent = true, desc = "Pretty print json" })
+vim.keymap.set("n", "<leader>jc", ":%!jq -c .<CR>", { noremap = true, silent = true, desc = "Compact json" })
