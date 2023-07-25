@@ -32,7 +32,18 @@ return {
     lazy = true,
     event = "VeryLazy",
     opts = {
-      filters = { custom = { "^.git$" } }
+      filters = {
+        custom = { "^.git$" }
+      },
+      diagnostics = {
+        enable = true,
+        icons = {
+          hint = "",
+          info = "",
+          warning = "",
+          error = "",
+        },
+      },
     }
   },
   {
@@ -111,6 +122,13 @@ return {
     dependencies = {
       "SmiteshP/nvim-navic",
     },
+    event = "VeryLazy",
+    opts = {},
+  },
+
+  -- Coverage
+  {
+    "andythigpen/nvim-coverage",
     event = "VeryLazy",
     opts = {},
   },

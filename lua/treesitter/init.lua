@@ -1,10 +1,10 @@
--- vim.cmd("highlight TSRainbowRed guifg=#E06C75 ctermfg=White")
--- vim.cmd("highlight TSRainbowYellow guifg=#E5C07B ctermfg=White")
--- vim.cmd("highlight TSRainbowBlue guifg=#98C379 ctermfg=White")
--- vim.cmd("highlight TSRainbowOrange guifg=#56B6C2 ctermfg=White")
--- vim.cmd("highlight TSRainbowGreen guifg=#61AFEF ctermfg=White")
--- vim.cmd("highlight TSRainbowViolet guifg=#C678DD ctermfg=White")
--- vim.cmd("highlight TSRainbowCyan guifg=#d65d0e ctermfg=White")
+vim.cmd("highlight TSRainbowRed guifg=#E06C75 ctermfg=White")
+vim.cmd("highlight TSRainbowYellow guifg=#E5C07B ctermfg=White")
+vim.cmd("highlight TSRainbowBlue guifg=#98C379 ctermfg=White")
+vim.cmd("highlight TSRainbowOrange guifg=#56B6C2 ctermfg=White")
+vim.cmd("highlight TSRainbowGreen guifg=#61AFEF ctermfg=White")
+vim.cmd("highlight TSRainbowViolet guifg=#C678DD ctermfg=White")
+vim.cmd("highlight TSRainbowCyan guifg=#d65d0e ctermfg=White")
 
 require'nvim-treesitter.configs'.setup {
   ensure_installed = "all",
