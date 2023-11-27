@@ -135,25 +135,27 @@ return {
 
   -- Treesitter
   "nvim-treesitter/nvim-treesitter",
-  "HiPhish/nvim-ts-rainbow2",
+  --  "HiPhish/nvim-ts-rainbow2",
   { "nvim-treesitter/playground", event = "VeryLazy", },
 
   -- Indent
   {
     "lukas-reineke/indent-blankline.nvim",
     event = { "BufReadPost", "BufNewFile" },
+    main = "ibl",
     opts = {
-      show_current_context = true,
-      use_treesitter = true,
-      filetype_exclude = {
-        "help",
-        "alpha",
-        "dashboard",
-        "lazy",
-        "mason",
-        "notify",
-        "toggleterm",
-        "lazyterm",
+      scope = { enabled = false },
+      exclude = {
+        filetypes = {
+          "help",
+          "alpha",
+          "dashboard",
+          "lazy",
+          "mason",
+          "notify",
+          "toggleterm",
+          "lazyterm",
+        },
       },
     }
   },

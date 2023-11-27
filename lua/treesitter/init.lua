@@ -36,6 +36,6 @@ require'nvim-treesitter.configs'.setup {
     extended_mode = true,
     max_file_lines = 2500,
     query = 'rainbow-parens',
-    strategy = require('ts-rainbow').strategy.global
+    -- strategy = require('ts-rainbow').strategy.global
   }
 }
