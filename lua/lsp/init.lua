@@ -59,8 +59,14 @@ cmp.setup({
   },
 })
 
-vim.keymap.set("n", "<c-up>", vim.diagnostic.goto_prev, { noremap = true, nowait = true, silent = true })
-vim.keymap.set("n", "<c-down>", vim.diagnostic.goto_next, { noremap = true, nowait = true, silent = true })
+vim.keymap.set("n", "<c-up>", function()
+  vim.diagnostic.goto_prev()
+  vim.cmd("normal! zz")
+end, { noremap = true, nowait = true, silent = true })
+vim.keymap.set("n", "<c-down>", function()
+  vim.diagnostic.goto_next()
+  vim.cmd("normal! zz")
+end, { noremap = true, nowait = true, silent = true })
 
 -- Use LspAttach autocommand to only map the following keys
 -- after the language server attaches to the current buffer
