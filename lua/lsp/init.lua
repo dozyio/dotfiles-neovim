@@ -10,7 +10,7 @@ require'lspconfig'.golangci_lint_ls.setup{
 	filetypes = {'go', 'gomod'},
   root_dir = lspconfig.util.root_pattern('.git', 'go.mod'),
   init_options = {
-      command = { "golangci-lint", "run", "-c", home .. ".golangci.yml", "--out-format", "json", "--issues-exit-code=1" };
+      command = { "golangci-lint", "run", "-c", home .. "/.golangci.yml", "--out-format", "json", "--issues-exit-code=1" };
   }
 }
 
