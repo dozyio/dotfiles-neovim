@@ -61,8 +61,8 @@ return {
     "ethanholz/nvim-lastplace",
     event = "BufReadPost",
     opts = {
-      lastplace_ignore_buftype = {"quickfix", "nofile", "help"},
-      lastplace_ignore_filetype = {"gitcommit", "gitrebase", "svn", "hgcommit"},
+      lastplace_ignore_buftype = { "quickfix", "nofile", "help" },
+      lastplace_ignore_filetype = { "gitcommit", "gitrebase", "svn", "hgcommit" },
       lastplace_open_folds = true
     }
   },
@@ -191,27 +191,40 @@ return {
       -- Luasnip
       {
         "L3MON4D3/LuaSnip",
-        -- dependencies = { "rafamadriz/friendly-snippets" },
-        config = function()
-          require("luasnip.loaders.from_vscode").lazy_load({})
-        end,
-      },
-      { "saadparwaiz1/cmp_luasnip" },
-
-      -- Copilot
-      {
-        "zbirenbaum/copilot.lua",
+        version = "v2,*",
+        build = (not jit.os:find("Windows"))
+            and "echo 'NOTE: jsregexp is optional, so not a big deal if it fails to build'; make install_jsregexp"
+            or nil,
+        dependencies = {
+          -- {
+          --   "rafamadriz/friendly-snippets",
+          -- },
+          {
+            "nvim-cmp",
+            dependencies = {
+              "saadparwaiz1/cmp_luasnip",
+            },
+          },
+          -- Copilot
+          {
+            "zbirenbaum/copilot.lua",
+            opts = {
+              suggestion = { enabled = false },
+              panel = { enabled = false },
+            },
+          },
+          {
+            "zbirenbaum/copilot-cmp",
+            event = { "InsertEnter", "LspAttach" },
+            config = true
+          },
+        },
         opts = {
-          suggestion = { enabled = false },
-          panel = { enabled = false },
+          history = true,
+          delete_check_events = "TextChanged",
         },
       },
-      {
-        "zbirenbaum/copilot-cmp",
-        event = { "InsertEnter", "LspAttach" },
-        config = true
-      },
-    }
+    },
   },
 
   -- Git
@@ -240,13 +253,13 @@ return {
           if vim.wo.diff then return ']c' end
           vim.schedule(function() gs.next_hunk() end)
           return '<Ignore>'
-        end, { expr=true, desc="Next hunk" })
+        end, { expr = true, desc = "Next hunk" })
 
         map('n', '[c', function()
           if vim.wo.diff then return '[c' end
           vim.schedule(function() gs.prev_hunk() end)
           return '<Ignore>'
-        end, { expr=true, desc="Previous hunk" })
+        end, { expr = true, desc = "Previous hunk" })
 
         -- Actions
         map('n', '<leader>hl', ":LazyGit<CR>", { desc = "LazyGit" })
@@ -256,16 +269,18 @@ return {
         map('n', '<leader>hu', gs.undo_stage_hunk, { desc = "Undo stage hunk" })
         map('n', '<leader>hR', gs.reset_buffer, { desc = "Reset buffer" })
         map('n', '<leader>hp', gs.preview_hunk, { desc = "Preview hunk" })
-        map('n', '<leader>hb', function() gs.blame_line{full=true} end, { desc = "Blame" })
+        map('n', '<leader>hb', function() gs.blame_line { full = true } end, { desc = "Blame" })
         map('n', '<leader>hd', gs.diffthis, { desc = "Diff" })
         map('n', '<leader>hD', function() gs.diffthis('~') end, { desc = "Diff buffer" })
         map('n', '<leader>tb', gs.toggle_current_line_blame, { desc = "Toggle blame" })
         map('n', '<leader>td', gs.toggle_deleted, { desc = "Toggle deleted" })
-        map('v', '<leader>hs', function() gs.stage_hunk {vim.fn.line("."), vim.fn.line("v")} end, { desc = "Stage selected" })
-        map('v', '<leader>hr', function() gs.reset_hunk {vim.fn.line("."), vim.fn.line("v")} end, { desc = "Reset selected" })
+        map('v', '<leader>hs', function() gs.stage_hunk { vim.fn.line("."), vim.fn.line("v") } end,
+          { desc = "Stage selected" })
+        map('v', '<leader>hr', function() gs.reset_hunk { vim.fn.line("."), vim.fn.line("v") } end,
+          { desc = "Reset selected" })
 
         -- Text object
-        map({'o', 'x'}, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
+        map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
       end
     }
   },
@@ -297,10 +312,10 @@ return {
     "ray-x/go.nvim",
     ft = { "go", "gomod" },
     dependencies = { -- optional packages
-      { "leoluz/nvim-dap-go", ft = { "go" }, },
-      { "mfussenegger/nvim-dap", ft = { "go" }, },
-      { "ray-x/guihua.lua", ft = { "go" }, },
-      { "rcarriga/nvim-dap-ui", ft = { "go" }, },
+      { "leoluz/nvim-dap-go",              ft = { "go" }, },
+      { "mfussenegger/nvim-dap",           ft = { "go" }, },
+      { "ray-x/guihua.lua",                ft = { "go" }, },
+      { "rcarriga/nvim-dap-ui",            ft = { "go" }, },
       { "theHamsta/nvim-dap-virtual-text", ft = { "go" }, },
     },
     config = true,

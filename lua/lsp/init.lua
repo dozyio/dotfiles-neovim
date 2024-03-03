@@ -6,11 +6,22 @@ lsp.on_attach(function(_, bufnr)
 end)
 
 local home=os.getenv( "HOME" )
+
+local function golangciConfig()
+  local f=io.open(vim.fn.getcwd() .. "/.golangci.yml", "r")
+  if f~=nil then
+    io.close(f)
+    return vim.fn.getcwd() .. "/.golangci.yml"
+  else
+    return home .. "/.golangci.yml"
+  end
+end
+
 require'lspconfig'.golangci_lint_ls.setup{
 	filetypes = {'go', 'gomod'},
   root_dir = lspconfig.util.root_pattern('.git', 'go.mod'),
   init_options = {
-      command = { "golangci-lint", "run", "-c", home .. "/.golangci.yml", "--out-format", "json", "--issues-exit-code=1" };
+      command = { "golangci-lint", "run", "-c", golangciConfig(), "--out-format", "json", "--issues-exit-code=1" };
   }
 }
 
@@ -21,6 +32,13 @@ lsp.setup()
 
 local cmp = require('cmp')
 local cmp_action = require('lsp-zero').cmp_action()
+-- local luasnip = require("luasnip")
+
+-- local has_words_before = function()
+--   unpack = unpack or table.unpack
+--   local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+--   return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+-- end
 
 cmp.setup({
   snippet = {
@@ -33,12 +51,35 @@ cmp.setup({
     { name = 'nvim_lsp' },
     { name = 'path' },
     { name = 'buffer', keyword_length = 3 },
-    -- { name = 'luasnip' },
+    { name = 'luasnip' },
   },
   mapping = {
     ['<CR>'] = cmp.mapping.confirm({select = false}),
     ['<Tab>'] = cmp_action.luasnip_supertab(),
     ['<S-Tab>'] = cmp_action.luasnip_shift_supertab(),
+    -- ["<Tab>"] = cmp.mapping(function(fallback)
+    --   if cmp.visible() then
+    --     cmp.select_next_item()
+    --   -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable() 
+    --   -- that way you will only jump inside the snippet region
+    --   elseif luasnip.expand_or_locally_jumpable() then
+    --     luasnip.expand_or_jump()
+    --   elseif has_words_before() then
+    --     cmp.complete()
+    --   else
+    --     fallback()
+    --   end
+    -- end, { "i", "s" }),
+    --
+    -- ["<S-Tab>"] = cmp.mapping(function(fallback)
+    --   if cmp.visible() then
+    --     cmp.select_prev_item()
+    --   elseif luasnip.jumpable(-1) then
+    --     luasnip.jump(-1)
+    --   else
+    --     fallback()
+    --   end
+    -- end, { "i", "s" }),
   },
   window = {
     completion = cmp.config.window.bordered(),
@@ -102,3 +143,15 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', '<c-k>', vim.lsp.buf.signature_help, { buffer = ev.buf })
   end,
 })
+
+-- local ls = require("luasnip")
+--
+-- vim.keymap.set({"i"}, "<C-K>", function() ls.expand() end, {silent = true})
+-- vim.keymap.set({"i", "s"}, "<C-L>", function() ls.jump( 1) end, {silent = true})
+-- vim.keymap.set({"i", "s"}, "<C-J>", function() ls.jump(-1) end, {silent = true})
+--
+-- vim.keymap.set({"i", "s"}, "<C-E>", function()
+-- 	if ls.choice_active() then
+-- 		ls.change_choice(1)
+-- 	end
+-- end, {silent = true})

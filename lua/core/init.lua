@@ -100,6 +100,7 @@ vim.keymap.set("c", "<c-e>", "<end>", { desc = "Jump to end of command" })
 -- Buffer
 vim.keymap.set("n", "<c-x>", ":bd<CR>", { noremap = true, silent = true, desc = "Close current buffer" })
 vim.keymap.set("n", "<c-X>", ":bd!<CR>", { noremap = true, silent = true, desc = "Close current buffer" })
+vim.keymap.set("n", "<c-l>", ":cclose<CR>", { noremap = true, silent = true, desc = "Close quickfix window" })
 
 -- Mouse
 vim.o.mouse = "v"
