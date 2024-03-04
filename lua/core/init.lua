@@ -66,7 +66,7 @@ vim.o.hlsearch = true
 vim.o.showmatch = true
 vim.o.ignorecase = true
 vim.o.smartcase = true
-vim.keymap.set("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>/", { desc = "Search and replace current word" })
+vim.keymap.set("n", "<leader>s", ":%s/\\<<C-r><C-w>\\>/<C-r><C-w>/g", { desc = "Search and replace current word" })
 vim.keymap.set("n", "<leader><space>", ":nohlsearch<CR>", { desc = "Remove highlighting" })
 -- keep cursor centered when searching
 vim.keymap.set("n", "n", "nzzzv", { noremap = true, nowait = true, silent = true })
