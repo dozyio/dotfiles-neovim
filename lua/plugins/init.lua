@@ -301,10 +301,10 @@ return {
   },
 
   -- Quickfix
-  {
-    "kevinhwang91/nvim-bqf",
-    event = "VeryLazy",
-  },
+  -- {
+  --   "kevinhwang91/nvim-bqf",
+  --   event = "VeryLazy",
+  -- },
 
   -- Languages
   -- go
