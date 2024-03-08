@@ -124,3 +124,21 @@ vim.g.editorconfig = false
 -- Json
 vim.keymap.set("n", "<leader>jp", ":%!jq .<CR>", { noremap = true, silent = true, desc = "Pretty print json" })
 vim.keymap.set("n", "<leader>jc", ":%!jq -c .<CR>", { noremap = true, silent = true, desc = "Compact json" })
+
+-- Save window position when switching buffers
+_G.buffer_views = {}
+vim.api.nvim_create_autocmd("BufLeave", {
+  callback = function()
+    local bufid = vim.fn.bufnr('%')
+    _G.buffer_views[bufid] = vim.fn.winsaveview()
+  end
+})
+
+vim.api.nvim_create_autocmd("BufEnter", {
+  callback = function()
+    local bufid = vim.fn.bufnr('%')
+    if _G.buffer_views[bufid] then
+      vim.fn.winrestview(_G.buffer_views[bufid])
+    end
+  end
+})
