@@ -329,44 +329,8 @@ return {
     build = ":call mkdp#util#install()"
   },
 
-  -- Zen mode
-  {
-    "folke/zen-mode.nvim",
-    event = "VeryLazy",
-    config = function()
-      require("zen-mode").setup {
-        window = {
-          backdrop = .75,
-          height = .95,
-          width = .95,
-          options = {
-            number = false,
-            relativenumber = false,
-            signcolumn = "no",
-            list = false,
-            cursorline = false,
-          },
-        },
-        plugins = {
-          options = {
-            enabled = true,
-            ruler = false,
-            showcmd = false,
-            colorcolumn = "",
-            cmdheight = 0,
-          },
-          gitsigns = { enabled = false },
-          kitty = {
-            enabled = true,
-            font = "+4", -- font size increment
-          },
-        },
-      }
-    end,
-  },
-
   -- New plugins to try
-  {
+  --[[ {
     "folke/noice.nvim",
     event = "VeryLazy",
     opts = {
@@ -400,8 +364,20 @@ return {
         }
       }
     }
-  },
+  }, ]]
   {
     "lvimuser/lsp-inlayhints.nvim"
+  },
+  {
+    -- keep window layout when closing buffer
+    "famiu/bufdelete.nvim"
+  },
+  {
+    "folke/trouble.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    opts = { use_diagnostic_signs = true },
+    keys = {
+      { "<leader>x", "<cmd>TroubleToggle workspace_diagnostics<cr>", desc = "Document Diagnostics (Trouble)" },
+    }
   },
 }
