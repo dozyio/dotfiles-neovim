@@ -126,6 +126,7 @@ vim.keymap.set("n", "<leader>jp", ":%!jq .<CR>", { noremap = true, silent = true
 vim.keymap.set("n", "<leader>jc", ":%!jq -c .<CR>", { noremap = true, silent = true, desc = "Compact json" })
 
 -- Save window position when switching buffers
+-- save position
 _G.buffer_views = {}
 vim.api.nvim_create_autocmd("BufLeave", {
   callback = function()
@@ -136,12 +137,27 @@ vim.api.nvim_create_autocmd("BufLeave", {
     end
   end
 })
-
+-- restore position
 vim.api.nvim_create_autocmd("BufEnter", {
   callback = function()
     local bufid = vim.fn.bufnr('%')
     if _G.buffer_views[bufid] then
       vim.fn.winrestview(_G.buffer_views[bufid])
     end
+  end
+})
+
+-- Don't show quickfix window in buffer list
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "qf",
+  callback = function()
+    vim.opt_local.buflisted = false
+  end,
+})
+
+-- Close quickfix window on exit
+vim.api.nvim_create_autocmd("QuitPre", {
+  callback = function()
+    vim.cmd("cclose")
   end
 })
