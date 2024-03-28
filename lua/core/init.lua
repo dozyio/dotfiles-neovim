@@ -98,8 +98,8 @@ vim.keymap.set("c", "<c-a>", "<home>", { desc = "Jump to start of command" })
 vim.keymap.set("c", "<c-e>", "<end>", { desc = "Jump to end of command" })
 
 -- Buffer
-vim.keymap.set("n", "<c-x>", ":bd<CR>", { noremap = true, silent = true, desc = "Close current buffer" })
-vim.keymap.set("n", "<c-X>", ":bd!<CR>", { noremap = true, silent = true, desc = "Close current buffer" })
+vim.keymap.set("n", "<c-x>", ":Bdelete<CR>", { noremap = true, silent = true, desc = "Close current buffer" })
+--vim.keymap.set("n", "<c-X>", ":bd!<CR>", { noremap = true, silent = true, desc = "Close current buffer" })
 vim.keymap.set("n", "<c-l>", ":cclose<CR>", { noremap = true, silent = true, desc = "Close quickfix window" })
 
 -- Mouse
@@ -129,8 +129,11 @@ vim.keymap.set("n", "<leader>jc", ":%!jq -c .<CR>", { noremap = true, silent = t
 _G.buffer_views = {}
 vim.api.nvim_create_autocmd("BufLeave", {
   callback = function()
-    local bufid = vim.fn.bufnr('%')
-    _G.buffer_views[bufid] = vim.fn.winsaveview()
+    -- Exclude NvimTree from saving positions
+    if vim.bo.filetype ~= "NvimTree" then
+      local bufid = vim.fn.bufnr('%')
+      _G.buffer_views[bufid] = vim.fn.winsaveview()
+    end
   end
 })
 
