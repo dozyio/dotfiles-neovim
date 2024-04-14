@@ -1,4 +1,5 @@
 -- NvimTree
+vim.keymap.set("n", "<F5>", ":NvimTreeRefresh<CR>", { desc = "NvimTree refresh" })
 -- Actions
 vim.keymap.set("n", "<leader>n", ":NvimTreeToggle<CR>", { desc = "NvimTree toggle" })
 vim.keymap.set("n", "<c-Left>", ":bprevious<CR>", { noremap = true, nowait = true, silent = true, desc = "Previous buffer" })

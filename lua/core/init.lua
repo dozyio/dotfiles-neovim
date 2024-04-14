@@ -101,6 +101,7 @@ vim.keymap.set("c", "<c-e>", "<end>", { desc = "Jump to end of command" })
 vim.keymap.set("n", "<c-x>", ":Bdelete<CR>", { noremap = true, silent = true, desc = "Close current buffer" })
 --vim.keymap.set("n", "<c-X>", ":bd!<CR>", { noremap = true, silent = true, desc = "Close current buffer" })
 vim.keymap.set("n", "<c-l>", ":cclose<CR>", { noremap = true, silent = true, desc = "Close quickfix window" })
+vim.keymap.set("n", "<c-;>", ":cclose<CR>:NvimTreeClose<CR>:TroubleClose<CR>", { noremap = true, silent = true, desc = "Close windows (quickfix, nvimtree, trouble)" })
 
 -- Mouse
 vim.o.mouse = "v"
