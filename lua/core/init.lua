@@ -14,20 +14,24 @@ vim.o.relativenumber = true
 vim.o.number = true
 
 -- Text
-vim.cmd([[autocmd BufEnter * set formatoptions+=j]]) -- better joins with comments
+vim.cmd([[autocmd BufEnter * set formatoptions+=j]])   -- better joins with comments
 vim.cmd([[autocmd BufEnter * set formatoptions-=cro]]) -- no continuation of comments
 
 -- Copy & Paste
 vim.keymap.set("v", "y", "ygv<esc>", { desc = "Keep end position after yank" })
-vim.keymap.set("n", "<leader>y", ":%y+<cr>", { noremap = true, nowait = true, silent = true, desc = "Copy file to system buffer" })
-vim.keymap.set("n", "<leader>c", "V\"+y", { noremap = true, nowait = true, silent = true, desc = "Copy current line to system buffer" })
-vim.keymap.set("v", "<leader>c", "\"+y", { noremap = true, nowait = true, silent = true, desc = "Copy selected to system buffer" })
+vim.keymap.set("n", "<leader>y", ":%y+<cr>",
+  { noremap = true, nowait = true, silent = true, desc = "Copy file to system buffer" })
+vim.keymap.set("n", "<leader>c", "V\"+y",
+  { noremap = true, nowait = true, silent = true, desc = "Copy current line to system buffer" })
+vim.keymap.set("v", "<leader>c", "\"+y",
+  { noremap = true, nowait = true, silent = true, desc = "Copy selected to system buffer" })
 
 -- Delete
 -- delete current line, don't save to register
-vim.keymap.set("n", "<leader>d", "V\"_d", { noremap = true, nowait = true, silent = true, desc= "Delete current line" })
+vim.keymap.set("n", "<leader>d", "V\"_d", { noremap = true, nowait = true, silent = true, desc = "Delete current line" })
 -- delete selection, don't save to register
-vim.keymap.set("v", "<leader>d", "\"_d", { noremap = true, nowait = true, silent = true, desc = "Delete current selection"})
+vim.keymap.set("v", "<leader>d", "\"_d",
+  { noremap = true, nowait = true, silent = true, desc = "Delete current selection" })
 
 -- Spelling
 vim.o.spell = false
@@ -73,7 +77,8 @@ vim.keymap.set("n", "n", "nzzzv", { noremap = true, nowait = true, silent = true
 vim.keymap.set("n", "N", "Nzzzv", { noremap = true, nowait = true, silent = true })
 
 -- Visual move
-vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", { noremap = true, nowait = true, silent = true, desc = "Move selection down" })
+vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv",
+  { noremap = true, nowait = true, silent = true, desc = "Move selection down" })
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv", { noremap = true, nowait = true, silent = true, desc = "Move selection up" })
 
 -- Scrolling
@@ -93,7 +98,7 @@ vim.o.colorcolumn = "80,120"
 
 -- Navigation
 vim.cmd("set nostartofline")
--- move to start/end of line 
+-- move to start/end of line
 vim.keymap.set("c", "<c-a>", "<home>", { desc = "Jump to start of command" })
 vim.keymap.set("c", "<c-e>", "<end>", { desc = "Jump to end of command" })
 
@@ -101,7 +106,8 @@ vim.keymap.set("c", "<c-e>", "<end>", { desc = "Jump to end of command" })
 vim.keymap.set("n", "<c-x>", ":Bdelete<CR>", { noremap = true, silent = true, desc = "Close current buffer" })
 --vim.keymap.set("n", "<c-X>", ":bd!<CR>", { noremap = true, silent = true, desc = "Close current buffer" })
 vim.keymap.set("n", "<c-l>", ":cclose<CR>", { noremap = true, silent = true, desc = "Close quickfix window" })
-vim.keymap.set("n", "<c-;>", ":cclose<CR>:NvimTreeClose<CR>:TroubleClose<CR>", { noremap = true, silent = true, desc = "Close windows (quickfix, nvimtree, trouble)" })
+vim.keymap.set("n", "<c-;>", ":cclose<CR>:NvimTreeClose<CR>:TroubleClose<CR>",
+  { noremap = true, silent = true, desc = "Close windows (quickfix, nvimtree, trouble)" })
 
 -- Mouse
 vim.o.mouse = "v"

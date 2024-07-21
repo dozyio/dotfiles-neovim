@@ -155,3 +155,11 @@ vim.api.nvim_create_autocmd('LspAttach', {
 -- 		ls.change_choice(1)
 -- 	end
 -- end, {silent = true})
+
+-- show coverage
+vim.cmd([[
+  augroup AutoCoverageOnBufRead
+    autocmd!
+    autocmd FileType typescript lua require('coverage').load(true)
+  augroup END
+]])

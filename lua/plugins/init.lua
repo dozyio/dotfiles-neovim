@@ -317,6 +317,8 @@ return {
       { "ray-x/guihua.lua",                ft = { "go" }, },
       { "rcarriga/nvim-dap-ui",            ft = { "go" }, },
       { "theHamsta/nvim-dap-virtual-text", ft = { "go" }, },
+      { "nvim-neotest/nvim-nio",           ft = { "go" }, },
+      { "jay-babu/mason-nvim-dap.nvim",    ft = { "go" }, },
     },
     config = true,
     event = "VeryLazy",
