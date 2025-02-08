@@ -2,15 +2,7 @@ return {
   -- Libs
   {
     "nvim-lua/plenary.nvim",
-    event = "VeryLazy",
-  },
-  {
-    "nvim-lua/popup.nvim",
-    event = "VeryLazy",
-  },
-  {
-    "MunifTanjim/nui.nvim",
-    event = "VeryLazy",
+    -- event = "VeryLazy",
   },
 
   -- Theme
@@ -90,7 +82,7 @@ return {
   -- Comments
   {
     "numToStr/Comment.nvim",
-    event = "VeryLazy",
+    -- event = "VeryLazy",
     config = true,
   },
 
@@ -100,13 +92,9 @@ return {
     event = "VeryLazy",
     init = function()
       vim.o.timeout = true
-      vim.o.timeoutlen = 300
+      -- vim.o.timeoutlen = 300
     end,
-    opts = {
-      window = {
-        winblend = 10,
-      }
-    }
+    opts = {}
   },
 
   -- Sessions
@@ -142,7 +130,7 @@ return {
   { "nvim-treesitter/playground", event = "VeryLazy", },
 
   -- Indent
-  {
+  --[[ {
     "lukas-reineke/indent-blankline.nvim",
     event = { "BufReadPost", "BufNewFile" },
     main = "ibl",
@@ -161,7 +149,7 @@ return {
         },
       },
     }
-  },
+  }, ]]
 
   -- Terminal
   {
@@ -170,7 +158,34 @@ return {
     config = true,
   },
 
+  -- Runner
+  {
+    'MarcHamamji/runner.nvim',
+    dependencies = {
+      'nvim-telescope/telescope.nvim',
+      dependencies = { 'nvim-lua/plenary.nvim' }
+    },
+    config = function()
+      local shell_handler = require('runner.handlers.helpers').shell_handler
+      vim.keymap.set('n', '<F11>', ":Runner<CR>a", { desc = "Run" })
+      require('runner').setup({
+        handlers = {
+          go = shell_handler('go run cmd/main.go'),
+        }
+      })
+    end
+  },
+
   -- LSP
+  -- ollama integration
+  -- {
+  --   "olimorris/codecompanion.nvim",
+  --   dependencies = {
+  --     "nvim-lua/plenary.nvim",
+  --     "nvim-treesitter/nvim-treesitter",
+  --   },
+  --   config = true
+  -- },
   {
     "VonHeikemen/lsp-zero.nvim",
     event = "BufReadPre",
@@ -205,19 +220,25 @@ return {
               "saadparwaiz1/cmp_luasnip",
             },
           },
-          -- Copilot
-          {
-            "zbirenbaum/copilot.lua",
-            opts = {
-              suggestion = { enabled = false },
-              panel = { enabled = false },
-            },
-          },
-          {
-            "zbirenbaum/copilot-cmp",
-            event = { "InsertEnter", "LspAttach" },
-            config = true
-          },
+          -- -- Copilot
+          -- {
+          --   "zbirenbaum/copilot.lua",
+          --   opts = {
+          --     suggestion = { enabled = false },
+          --     panel = { enabled = false },
+          --   },
+          -- },
+          -- {
+          --   "zbirenbaum/copilot-cmp",
+          --   event = { "InsertEnter", "LspAttach" },
+          --   config = true
+          -- },
+        },
+        {
+          "supermaven-inc/supermaven-nvim",
+          config = function()
+            require("supermaven-nvim").setup({})
+          end,
         },
         opts = {
           history = true,
@@ -374,6 +395,7 @@ return {
     -- keep window layout when closing buffer
     "famiu/bufdelete.nvim"
   },
+  --[[
   {
     "folke/trouble.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -381,5 +403,5 @@ return {
     keys = {
       { "<leader>x", "<cmd>TroubleToggle workspace_diagnostics<cr>", desc = "Document Diagnostics (Trouble)" },
     }
-  },
+  }, ]]
 }

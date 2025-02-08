@@ -7,7 +7,7 @@ end)
 
 local home=os.getenv( "HOME" )
 
-local function golangciConfig()
+--[[ local function golangciConfig()
   local f=io.open(vim.fn.getcwd() .. "/.golangci.yml", "r")
   if f~=nil then
     io.close(f)
@@ -23,10 +23,21 @@ require'lspconfig'.golangci_lint_ls.setup{
   init_options = {
       command = { "golangci-lint", "run", "-c", golangciConfig(), "--out-format", "json", "--issues-exit-code=1" };
   }
-}
+} ]]
 
 -- (Optional) Configure lua language server for neovim
 require('lspconfig').lua_ls.setup(lsp.nvim_lua_ls())
+
+-- require("codecompanion").setup({
+--   strategies = {
+--     chat = {
+--       adapter = "ollama",
+--     },
+--     inline = {
+--       adapter = "ollama",
+--     },
+--   },
+-- })
 
 lsp.setup()
 
@@ -47,11 +58,12 @@ cmp.setup({
     end,
   },
   sources = {
-    { name = 'copilot' },
+    -- { name = 'copilot' },
+    { name = 'supermaven' },
     { name = 'nvim_lsp' },
     { name = 'path' },
     { name = 'buffer', keyword_length = 3 },
-    { name = 'luasnip' },
+    -- { name = 'luasnip' },
   },
   mapping = {
     ['<CR>'] = cmp.mapping.confirm({select = false}),
@@ -88,7 +100,7 @@ cmp.setup({
   sorting = {
     priority_weight = 2,
     comparators = {
-      require("copilot_cmp.comparators").prioritize,
+      -- require("copilot_cmp.comparators").prioritize,
 
       -- Below is the default comparitor list and order for nvim-cmp
       cmp.config.compare.offset,

@@ -39,3 +39,5 @@ require'nvim-treesitter.configs'.setup {
     -- strategy = require('ts-rainbow').strategy.global
   }
 }
+
+vim.keymap.set("n", "<leader>tt", ":lua vim.treesitter.stop()<CR>:lua vim.treesitter.start()<CR>", { noremap = true, silent = true, desc = "Restart Treesitter" })
