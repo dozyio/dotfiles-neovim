@@ -111,3 +111,7 @@ vim.keymap.set(
   ":mod<CR>:lua vim.treesitter.stop()<CR>:lua vim.treesitter.start()<CR>",
   { noremap = true, silent = true, desc = "Restart Treesitter" }
 )
+
+vim.keymap.set("n", "<leader>f", vim.lsp.buf.code_action, { desc = "Code Action" })
+vim.keymap.set("n", "<leader>p", ":LazyFormat<CR>", { desc = "Format" })
+vim.keymap.set("n", "gX", vim.lsp.buf.rename, { desc = "LSP Rename" })

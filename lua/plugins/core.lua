@@ -7,7 +7,6 @@ return {
     opts = {
       zen = { enabled = false },
       dim = { enabled = false },
-      image = { enabled = false },
       words = { enabled = false },
     },
   },
