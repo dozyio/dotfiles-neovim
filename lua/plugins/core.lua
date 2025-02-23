@@ -27,22 +27,40 @@ return {
     "saghen/blink.cmp",
     opts = {
       keymap = {
+        preset = "enter",
         ["<C-c>"] = { "cancel", "fallback" },
-        ["<esc>"] = { "cancel", "fallback" },
       },
     },
   },
-  -- {
-  --   "stevearc/conform.nvim",
-  --   keys = {
-  --     {
-  --       "<leader>p",
-  --       function()
-  --         require("conform").format({ formatters = { "injected" }, timeout_ms = 3000 })
-  --       end,
-  --       mode = { "n", "v" },
-  --       desc = "Format Injected Langs",
-  --     },
-  --   },
-  -- },
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      servers = { eslint = {} },
+      setup = {
+        eslint = function()
+          require("lazyvim.util").lsp.on_attach(function(client)
+            if client.name == "eslint" then
+              client.server_capabilities.documentFormattingProvider = true
+            elseif client.name == "vtsls" then
+              client.server_capabilities.documentFormattingProvider = false
+            end
+          end)
+        end,
+      },
+    },
+  },
+  {
+    "akinsho/bufferline.nvim",
+    opts = {
+      options = {
+        separator_style = "slant",
+        max_name_length = 30,
+        indicator = {
+          style = "underline",
+        },
+        show_close_icon = false,
+        show_buffer_close_icons = false,
+      },
+    },
+  },
 }

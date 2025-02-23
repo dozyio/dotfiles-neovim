@@ -25,8 +25,12 @@ vim.cmd([[autocmd BufEnter * set formatoptions-=cro]]) -- no continuation of com
 -- ignore editorconfig
 vim.g.editorconfig = false
 
+-- Window Title
 vim.o.title = true
 vim.o.titlestring = "%<%F - NVIM"
+
+-- Prettier
+vim.g.lazyvim_prettier_needs_config = true
 
 -- Don't show quickfix window in buffer list
 vim.api.nvim_create_autocmd("FileType", {
