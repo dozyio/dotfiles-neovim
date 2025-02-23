@@ -27,8 +27,30 @@ return {
     "saghen/blink.cmp",
     opts = {
       keymap = {
-        preset = "enter",
-        ["<C-c>"] = { "cancel", "fallback" },
+        preset = "none",
+        ["<up>"] = { "select_prev", "fallback" },
+        ["<down>"] = { "select_next", "fallback" },
+        ["<cr>"] = { "accept", "fallback" },
+        ["<tab>"] = { "select_and_accept", "fallback" },
+      },
+      completion = {
+        menu = {
+          auto_show = false,
+        },
+        list = {
+          selection = {
+            preselect = false,
+            auto_insert = false,
+          },
+        },
+        ghost_text = {
+          enabled = true,
+          show_with_selection = true,
+          show_without_selection = true,
+        },
+      },
+      signature = {
+        enabled = true,
       },
     },
   },
@@ -62,5 +84,13 @@ return {
         show_buffer_close_icons = false,
       },
     },
+  },
+  {
+    "folke/noice.nvim",
+    opts = function(_, opts)
+      opts.lsp.signature = {
+        auto_open = { enabled = false },
+      }
+    end,
   },
 }
