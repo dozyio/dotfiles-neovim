@@ -32,6 +32,9 @@ vim.o.titlestring = "%<%F - NVIM"
 -- Prettier
 vim.g.lazyvim_prettier_needs_config = true
 
+-- Conceal
+vim.wo.conceallevel = 0
+
 -- Don't show quickfix window in buffer list
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "qf",
