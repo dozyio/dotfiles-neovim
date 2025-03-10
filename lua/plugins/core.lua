@@ -31,6 +31,11 @@ return {
         ["<down>"] = { "select_next", "fallback" },
         ["<cr>"] = { "accept", "fallback" },
         ["<tab>"] = { "select_and_accept", "fallback" },
+        ["<c-h>"] = {
+          function(cmp)
+            cmp.show()
+          end,
+        },
       },
       completion = {
         menu = {
